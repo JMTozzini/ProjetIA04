@@ -10,15 +10,17 @@ import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
+import sim.portrayal.grid.SparseGridPortrayal2D;
 
 public class Vue extends GUIState {
 
 	private Display2D display;
 	private JFrame displayFrame;
-	//private portrayal
+	private SparseGridPortrayal2D yardPortrayal;
 	
 	public Vue(SimState iState) {
 		super(iState);
+		yardPortrayal = new SparseGridPortrayal2D();
 	}
 	
 	public static String getName()
@@ -35,7 +37,7 @@ public class Vue extends GUIState {
 	public void setupEnvironnement()
 	{
 		Model aModel = (Model) state;
-		// portrayal.setField(model.yard)
+		yardPortrayal.setField(aModel.getYard());
 		// portrayal.setPortrayalForClass(agent.class, getAgentPortrayal)
 		display.reset();
 		display.setBackdrop(Color.WHITE);
@@ -51,6 +53,6 @@ public class Vue extends GUIState {
 		displayFrame.setTitle("simulateur d'incendie");
 		iController.registerFrame(displayFrame);
 		displayFrame.setVisible(true);
-		//display.attach(portrayal, "yaard");
+		display.attach(yardPortrayal, "yard");
 	}
 }
