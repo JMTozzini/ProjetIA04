@@ -22,13 +22,17 @@ public class AgentEnvironnement implements Steppable {
 	private int altitude;
 	private int sens; // Uniquement pour Eau et Route
 		
-	public AgentEnvironnement()
+	public AgentEnvironnement(AgentEnvironnement iAgent)
 	{
 		super();
-		this.type = -1;
-		this.altitude = -1;
-		this.inflammable = true;
-		this.sens = -1 ;
+		this.type = iAgent.getType();
+		this.altitude = iAgent.getAltitude();
+		this.inflammable = iAgent.isInflammable();
+		this.resExterne = iAgent.getResExterne();
+		this.resInterne = iAgent.getResInterne();
+		this.sens = iAgent.getSens() ;
+		this.x = iAgent.getX();
+		this.y = iAgent.getY();
 	}
 	
 	public AgentEnvironnement(int iType, int iAltitude) {
