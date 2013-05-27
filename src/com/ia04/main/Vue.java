@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
+import com.ia04.agents.AgentEnvironnement;
 import com.ia04.constantes.ConstantesEnv;
 
 import sim.display.Controller;
@@ -11,6 +12,7 @@ import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
 import sim.portrayal.grid.SparseGridPortrayal2D;
+import sim.portrayal.simple.OvalPortrayal2D;
 
 public class Vue extends GUIState {
 
@@ -38,7 +40,7 @@ public class Vue extends GUIState {
 	{
 		Model aModel = (Model) state;
 		yardPortrayal.setField(aModel.getYard());
-		// portrayal.setPortrayalForClass(agent.class, getAgentPortrayal)
+		yardPortrayal.setPortrayalForClass(AgentEnvironnement.class, getAgentEnvPortrayal());
 		display.reset();
 		display.setBackdrop(Color.WHITE);
 		display.repaint();
@@ -54,5 +56,11 @@ public class Vue extends GUIState {
 		iController.registerFrame(displayFrame);
 		displayFrame.setVisible(true);
 		display.attach(yardPortrayal, "yard");
+	}
+	
+	public OvalPortrayal2D getAgentEnvPortrayal()
+	{
+		OvalPortrayal2D oOvPor2D = new OvalPortrayal2D(Color.green, true);
+		return oOvPor2D;
 	}
 }

@@ -1,9 +1,12 @@
 package com.ia04.main;
 
+import com.ia04.agents.AgentEnvironnement;
+import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesEnv;
 
 import sim.engine.SimState;
 import sim.field.grid.SparseGrid2D;
+import sim.util.Int2D;
 
 public class Model extends SimState {
 
@@ -20,9 +23,18 @@ public class Model extends SimState {
 	{
 		super.start();
 		yard.clear();
-		// add agents
+		setEnvironnement();
 	}
 
+	public void setEnvironnement()
+	{
+		AgentEnvironnement aAgentEnv = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_MOY, 0);
+		Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
+		yard.setObjectLocation(aAgentEnv, aLocation);
+		aAgentEnv.setX(aLocation.x);
+		aAgentEnv.setY(aLocation.y);
+	}
+	
 	public SparseGrid2D getYard() {
 		return yard;
 	}
