@@ -1,11 +1,12 @@
 package com.ia04.main;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
 import com.ia04.agents.AgentEnvironnement;
-import com.ia04.constantes.ConstantesEnv;
+import com.ia04.constantes.ConstantesGenerales;
 
 import sim.display.Controller;
 import sim.display.Display2D;
@@ -13,6 +14,7 @@ import sim.display.GUIState;
 import sim.engine.SimState;
 import sim.portrayal.grid.SparseGridPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
+import sim.portrayal.simple.RectanglePortrayal2D;
 
 public class Vue extends GUIState {
 
@@ -49,7 +51,7 @@ public class Vue extends GUIState {
 	public void init(Controller iController)
 	{
 		super.init(iController);
-		display = new Display2D(ConstantesEnv.FRAME_SIZE, ConstantesEnv.FRAME_SIZE, this);
+		display = new Display2D(ConstantesGenerales.FRAME_SIZE, ConstantesGenerales.FRAME_SIZE, this);
 		display.setClipping(false);
 		displayFrame = display.createFrame();
 		displayFrame.setTitle("simulateur d'incendie");
@@ -58,9 +60,9 @@ public class Vue extends GUIState {
 		display.attach(yardPortrayal, "yard");
 	}
 	
-	public OvalPortrayal2D getAgentEnvPortrayal()
+	public RectanglePortrayal2D getAgentEnvPortrayal()
 	{
-		OvalPortrayal2D oOvPor2D = new OvalPortrayal2D(Color.green, true);
+		RectanglePortrayal2D oOvPor2D = new RectanglePortrayal2D(Color.GRAY,1 , true);
 		return oOvPor2D;
 	}
 }

@@ -23,4 +23,11 @@ public class ConstantesAgents {
 	public static int RES_EXT_VEG_FORTE		= 30;
 	public static int RES_EXT_HABITATION	= 40;
 	
+	// Sens pour Eau et Route
+	public static int NORD	= 1;
+	public static int SUD	= 2;
+	public static int EST	= 3;
+	public static int OUEST	= 4;
+	
+	
 }

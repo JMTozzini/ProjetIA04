@@ -4,8 +4,9 @@ import com.ia04.constantes.ConstantesAgents;
 
 import sim.engine.SimState;
 import sim.engine.Steppable;
+import sim.util.Int2D;
 
-public class AgentEnvironnement implements Steppable{
+public class AgentEnvironnement implements Steppable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -19,12 +20,23 @@ public class AgentEnvironnement implements Steppable{
 	private int resInterne;
 	private int resExterne;
 	private int altitude;
+	private int sens; // Uniquement pour Eau et Route
 		
+	public AgentEnvironnement()
+	{
+		super();
+		this.type = -1;
+		this.altitude = -1;
+		this.inflammable = true;
+		this.sens = -1 ;
+	}
+	
 	public AgentEnvironnement(int iType, int iAltitude) {
 		super();
 		this.type = iType;
 		this.altitude = iAltitude;
 		this.inflammable = true;
+		this.sens = -1 ;
 		
 		switch (type) {
 		case 1: // TYPE_VEG_FAIBLE
@@ -109,5 +121,29 @@ public class AgentEnvironnement implements Steppable{
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public int getSens() {
+		return sens;
+	}
+
+	public void setSens(int sens) {
+		this.sens = sens;
+	}
+	
+	public void setLocation(Int2D iLocation)
+	{
+		this.x = iLocation.x;
+		this.y = iLocation.y;
+	}
+	
+	public Int2D getLocation()
+	{
+		return (new Int2D(this.x, this.y));
+	}
+	
+	public String toString()
+	{
+		return "Agent " + type + ", location ("+x+", "+y+")"; 
 	}
 }

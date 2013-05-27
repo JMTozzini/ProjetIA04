@@ -1,6 +1,12 @@
 package com.ia04.constantes;
 
 public class ConstantesEnv {
-	public static int FRAME_SIZE 	= 400;
-	public static int GRID_SIZE 	= 200;	
+	public static double PROP_VEG_FAIBLE	= 0.20;
+	public static double PROP_VEG_MOY		= 0.20;
+	public static double PROP_VEG_FORTE		= 0.15;
+	public static double PROP_HABITATION	= 0.15;
+	public static double PROP_ROCHE			= 0.05;
+	public static double PROP_EAU			= 0.10;
+	public static double PROP_ROUTE			= 0.15;
+	// ce sont des proportions donc la somme est 1 !
 }
