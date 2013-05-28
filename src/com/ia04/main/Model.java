@@ -32,7 +32,7 @@ public class Model extends SimState {
 	{
 		setRoute();
 		//		setHabitation();
-		setEau();
+//		setEau();
 		//		setRoche();
 		//		setVegetationFaible();
 		//		setVegetationMoyenne();
@@ -60,15 +60,12 @@ public class Model extends SimState {
 				aAgentRoute.setLocation(aLocation);
 				aPrevAgent = new AgentEnvironnement(aAgentRoute);
 			}
-			else //if (i < yard.getHeight())
+			else
 			{
-				int aRandomCste = 80;
+				int aRandomCste = 100;
 				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner environ 2/aRandomCste
 				Int2D aLocation = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
-
-				if(aLocation == null)
-					System.out.println(aPrevAgent.getSens() + " " + aNewSens);
-
+				aLocation = correctionTrajectoire(aLocation, aPrevAgent, aAgentRoute);
 				yard.setObjectLocation(aAgentRoute, aLocation);
 				aAgentRoute.setLocation(aLocation);
 				aPrevAgent = aAgentRoute;
@@ -115,46 +112,84 @@ public class Model extends SimState {
 		}
 
 	}
-
+	
+	private Int2D correctionTrajectoire(Int2D ioLocation, AgentEnvironnement iPrevAgent, AgentEnvironnement iAgentRoute)
+	{
+		int aNewSens = random.nextInt(2);
+		
+		if(ioLocation.x >= yard.getWidth() || ioLocation.x <= 0)
+		{
+			switch (aNewSens) 
+			{
+			case 0:
+				iAgentRoute.setSens(ConstantesAgents.SUD);
+				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
+				break;
+			case 1:
+				iAgentRoute.setSens(ConstantesAgents.NORD);
+				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
+				break;
+			default:
+				break;
+			}
+		}
+		else if(ioLocation.y >= yard.getHeight() || ioLocation.y <= 0)
+		{
+			switch (aNewSens) 
+			{
+			case 0:
+				iAgentRoute.setSens(ConstantesAgents.EST);
+				ioLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
+				break;
+			case 1:
+				iAgentRoute.setSens(ConstantesAgents.OUEST);
+				ioLocation = new Int2D(iPrevAgent.getX()-1, iPrevAgent.getY());
+				break;
+			default:
+				break;
+			}
+		}
+		return ioLocation;
+	}
+	
 	private Int2D getNewDirection(AgentEnvironnement iPrevAgent, AgentEnvironnement iCurAgent, int iNewSens)
 	{		
-		System.out.println(iNewSens);
+//		System.out.println(iNewSens);
 		Int2D oLocation = null;
 
 		boolean aSud = (iPrevAgent.getSens() == ConstantesAgents.SUD && iNewSens > 1) || 
 				(iNewSens == 0 && (iPrevAgent.getSens() == ConstantesAgents.EST || iPrevAgent.getSens() == ConstantesAgents.OUEST));
 
-		boolean aNord = (iCurAgent.getType() != ConstantesAgents.TYPE_ROUTE) && 
-				((iPrevAgent.getSens() == ConstantesAgents.NORD && iNewSens > 1) ||
-				(iNewSens == 1 && (iPrevAgent.getSens() == ConstantesAgents.EST || iPrevAgent.getSens() == ConstantesAgents.OUEST)));
+		boolean aNord = (iPrevAgent.getSens() == ConstantesAgents.NORD && iNewSens > 1) ||
+				(iNewSens == 1 && (iPrevAgent.getSens() == ConstantesAgents.EST || iPrevAgent.getSens() == ConstantesAgents.OUEST));
 
-		boolean aOuest = (iPrevAgent.getSens() == ConstantesAgents.OUEST && iNewSens > 0) ||
+		boolean aOuest = (iPrevAgent.getSens() == ConstantesAgents.OUEST && iNewSens > 1) ||
 				(iNewSens == 0 && (iPrevAgent.getSens() == ConstantesAgents.NORD || iPrevAgent.getSens() == ConstantesAgents.SUD));
 
-		boolean aEst = (iPrevAgent.getSens() == ConstantesAgents.EST && iNewSens > 0) ||
+		boolean aEst = (iPrevAgent.getSens() == ConstantesAgents.EST && iNewSens > 1) ||
 				(iNewSens == 1 && (iPrevAgent.getSens() == ConstantesAgents.NORD || iPrevAgent.getSens() == ConstantesAgents.SUD));
 
 		if(aSud) // SUD
 		{
-			System.out.println("sud");
+//			System.out.println("sud");
 			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
 			iCurAgent.setSens(ConstantesAgents.SUD);
 		}
 		else if (aNord) // NORD
 		{
-			System.out.println("NORD");
+//			System.out.println("NORD");
 			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
 			iCurAgent.setSens(ConstantesAgents.NORD);			
 		}
 		else if (aEst) //EST
 		{
-			System.out.println("EST");
+//			System.out.println("EST");
 			oLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
 			iCurAgent.setSens(ConstantesAgents.EST);
 		}
 		else if(aOuest) // OUEST
 		{
-			System.out.println("OUEST");
+//			System.out.println("OUEST");
 			oLocation = new Int2D(iPrevAgent.getX()-1, iPrevAgent.getY());
 			iCurAgent.setSens(ConstantesAgents.OUEST);
 
