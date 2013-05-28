@@ -62,40 +62,16 @@ public class Model extends SimState {
 			}
 			else //if (i < yard.getHeight())
 			{
-				if(i%2 == 0) // Tout droit
-				{
-					Int2D aLocation = null;
-					
-					if(aPrevAgent.getSens() == ConstantesAgents.SUD)
-						aLocation = new Int2D(aPrevAgent.getX(), aPrevAgent.getY()+1);
-					else if (aPrevAgent.getSens() == ConstantesAgents.NORD)
-						aLocation = new Int2D(aPrevAgent.getX(), aPrevAgent.getY()-1);
-					else if (aPrevAgent.getSens() == ConstantesAgents.EST)
-						aLocation = new Int2D(aPrevAgent.getX()+1, aPrevAgent.getY());
-					else if (aPrevAgent.getSens() == ConstantesAgents.OUEST)
-						aLocation = new Int2D(aPrevAgent.getX()-1, aPrevAgent.getY());
-					else
-						System.out.println("Erreur : Tout droit");
-					
-					aAgentRoute.setSens(aPrevAgent.getSens());					
-					yard.setObjectLocation(aAgentRoute, aLocation);
-					aAgentRoute.setLocation(aLocation);
-					aPrevAgent = aAgentRoute;
-					
-				}
-				else // Possibilité de tourner
-				{
-					int aRandomCste = 40;
-					int aNewSens = random.nextInt(aRandomCste); // Proba de tourner 2/aRandomCste
-					Int2D aLocation = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
-										
-					if(aLocation == null)
-						System.out.println(aPrevAgent.getSens() + " " + aNewSens);
-					
-					yard.setObjectLocation(aAgentRoute, aLocation);
-					aAgentRoute.setLocation(aLocation);
-					aPrevAgent = aAgentRoute;
-				}
+				int aRandomCste = 80;
+				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner environ 2/aRandomCste
+				Int2D aLocation = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
+									
+				if(aLocation == null)
+					System.out.println(aPrevAgent.getSens() + " " + aNewSens);
+				
+				yard.setObjectLocation(aAgentRoute, aLocation);
+				aAgentRoute.setLocation(aLocation);
+				aPrevAgent = aAgentRoute;
 			}
 		}
 	}
