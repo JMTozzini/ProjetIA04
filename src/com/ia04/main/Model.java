@@ -41,6 +41,11 @@ public class Model extends SimState {
 	
 	public void setRoute()
 	{
+
+		// penser à gerer les limtes du terrain GRID_SIZE (yard.getWidth/yard.getHeigh), si limite changer de direction
+		// Cette route est à tendance NORD/SUD, On evite qu'elle retourne au nord sinon ça fais des noeuds.
+		// penser a une maniere de faire une route à tendance EST/OUEST
+		
 		int aNbRoute = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROUTE);
 		AgentEnvironnement aPrevAgent = null;
 		
@@ -92,25 +97,23 @@ public class Model extends SimState {
 					aPrevAgent = aAgentRoute;
 				}
 			}
-			System.out.println("Previous : " + aPrevAgent);
-			System.out.println("Current : " + aAgentRoute);
 		}
 	}
 	
 	private Int2D getNewDirection(AgentEnvironnement iPrevAgent, AgentEnvironnement iCurAgent, int iNewSens)
-	{
+	{		
 		Int2D oLocation = null;
 		
 		boolean aSud = (iPrevAgent.getSens() == ConstantesAgents.SUD && iNewSens > 1) || 
 			(iNewSens == 0 && (iPrevAgent.getSens() == ConstantesAgents.EST || iPrevAgent.getSens() == ConstantesAgents.OUEST));
 		
-		boolean aNord = (iPrevAgent.getSens() == ConstantesAgents.NORD && iNewSens > 1) ||
-			(iNewSens == 1 && (iPrevAgent.getSens() == ConstantesAgents.EST || iPrevAgent.getSens() == ConstantesAgents.OUEST));
+//		boolean aNord = (iPrevAgent.getSens() == ConstantesAgents.NORD && iNewSens > 1) ||
+//			(iNewSens == 1 && (iPrevAgent.getSens() == ConstantesAgents.EST || iPrevAgent.getSens() == ConstantesAgents.OUEST));
 		
-		boolean aOuest = (iPrevAgent.getSens() == ConstantesAgents.OUEST && iNewSens > 1) ||
+		boolean aOuest = (iPrevAgent.getSens() == ConstantesAgents.OUEST && iNewSens > 0) ||
 			(iNewSens == 0 && (iPrevAgent.getSens() == ConstantesAgents.NORD || iPrevAgent.getSens() == ConstantesAgents.SUD));
 		
-		boolean aEst = (iPrevAgent.getSens() == ConstantesAgents.EST && iNewSens > 1) ||
+		boolean aEst = (iPrevAgent.getSens() == ConstantesAgents.EST && iNewSens > 0) ||
 			(iNewSens == 1 && (iPrevAgent.getSens() == ConstantesAgents.NORD || iPrevAgent.getSens() == ConstantesAgents.SUD));
 		
 		if(aSud) // SUD
@@ -118,11 +121,11 @@ public class Model extends SimState {
 			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
 			iCurAgent.setSens(ConstantesAgents.SUD);
 		}
-		else if (aNord) // NORD
-		{
-			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
-			iCurAgent.setSens(ConstantesAgents.NORD);			
-		}
+//		else if (aNord) // NORD
+//		{
+//			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
+//			iCurAgent.setSens(ConstantesAgents.NORD);			
+//		}
 		else if (aEst) //EST
 		{
 			oLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
