@@ -31,21 +31,16 @@ public class Model extends SimState {
 	public void setEnvironnement() // Set les agents environnement uniquement
 	{
 		setRoute();
-		//		setHabitation();
+//		setHabitation();
 //		setEau();
-		//		setRoche();
-		//		setVegetationFaible();
-		//		setVegetationMoyenne();
-		//		setVegetationForte();
+//		setRoche();
+//		setVegetationFaible();
+//		setVegetationMoyenne();
+//		setVegetationForte();
 	}
 
 	public void setRoute()
 	{
-
-		// penser à gerer les limtes du terrain GRID_SIZE (yard.getWidth/yard.getHeigh), si limite changer de direction
-		// Cette route est à tendance NORD/SUD, On evite qu'elle retourne au nord sinon ça fais des noeuds.
-		// penser a une maniere de faire une route à tendance EST/OUEST
-
 		int aNbRoute = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROUTE);
 		AgentEnvironnement aPrevAgent = null;
 
@@ -64,93 +59,126 @@ public class Model extends SimState {
 			{
 				int aRandomCste = 100;
 				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner environ 2/aRandomCste
-				Int2D aLocation = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
-				aLocation = correctionTrajectoire(aLocation, aPrevAgent, aAgentRoute);
-				yard.setObjectLocation(aAgentRoute, aLocation);
-				aAgentRoute.setLocation(aLocation);
+				Int2D aLocationStep1 = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
+//				aLocation = correctionTrajectoire(aLocation, aPrevAgent, aAgentRoute);
+				Int2D aLocationFinal = new Int2D(yard.stx(aLocationStep1.x), yard.sty(aLocationStep1.y));
+				yard.setObjectLocation(aAgentRoute, aLocationFinal);
+				yard.setObjectLocation(aAgentRoute, aLocationFinal);
+				aAgentRoute.setLocation(aLocationFinal);
 				aPrevAgent = aAgentRoute;
 			}
 		}
 	}
-
+	
 	public void setEau()
 	{
 		int aNbEau = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_EAU);
-		int sens = ConstantesAgents.NORD;
-		int steps = 1;
 		AgentEnvironnement aPrevAgent = null;
 
-		for(int i=0; i<aNbEau;i++)
+		for(int i=0; i < aNbEau; i++)
 		{
+			AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
 			if(i==0)
 			{
-				AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
-				Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
-				aAgentEau.setSens(ConstantesAgents.NORD);		
-				yard.setObjectLocation(aAgentEau, aLocation);	
+				Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), 1);
+				aAgentEau.setSens(ConstantesAgents.SUD);
+				yard.setObjectLocation(aAgentEau, aLocation);
 				aAgentEau.setLocation(aLocation);
 				aPrevAgent = new AgentEnvironnement(aAgentEau);
 			}
 			else
 			{
-				for(int j = 0;j<steps;j++){
-					AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
-					Int2D aLocation = getNewDirection(aPrevAgent, aAgentEau, sens);	
-					yard.setObjectLocation(aAgentEau, aLocation);
-					aAgentEau.setLocation(aLocation);
-					aPrevAgent = aAgentEau;
-
-				}
-			}
-			sens++;
-			if(sens == 5){
-				sens = 1; 
-			}
-			if(i%2 == 0){
-				steps++;
+				int aRandomCste = 100;
+				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner environ 2/aRandomCste
+				Int2D aLocationStep1 = getNewDirection(aPrevAgent, aAgentEau, aNewSens);
+//				aLocation = correctionTrajectoire(aLocation, aPrevAgent, aAgentEau);
+				Int2D aLocationFinal = new Int2D(yard.stx(aLocationStep1.x),yard.sty(aLocationStep1.y));
+				yard.setObjectLocation(aAgentEau, aLocationFinal);
+				aAgentEau.setLocation(aLocationFinal);
+				aPrevAgent = aAgentEau;
 			}
 		}
-
 	}
+
+//	public void setEau()
+//	{
+//		int aNbEau = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_EAU);
+//		int sens = ConstantesAgents.NORD;
+//		int steps = 1;
+//		AgentEnvironnement aPrevAgent = null;
+//
+//		for(int i=0; i<aNbEau;i++)
+//		{
+//			if(i==0)
+//			{
+//				AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
+//				Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
+//				aAgentEau.setSens(ConstantesAgents.NORD);		
+//				yard.setObjectLocation(aAgentEau, aLocation);	
+//				aAgentEau.setLocation(aLocation);
+//				aPrevAgent = new AgentEnvironnement(aAgentEau);
+//			}
+//			else
+//			{
+//				for(int j = 0;j<steps;j++){
+//					AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
+//					Int2D aLocation = getNewDirection(aPrevAgent, aAgentEau, sens);	
+//					yard.setObjectLocation(aAgentEau, aLocation);
+//					aAgentEau.setLocation(aLocation);
+//					aPrevAgent = aAgentEau;
+//
+//				}
+//			}
+//			sens++;
+//			if(sens == 5){
+//				sens = 1; 
+//			}
+//			if(i%2 == 0){
+//				steps++;
+//			}
+//		}
+//
+//	}
 	
-	private Int2D correctionTrajectoire(Int2D ioLocation, AgentEnvironnement iPrevAgent, AgentEnvironnement iAgentRoute)
-	{
-		int aNewSens = random.nextInt(2);
-		
-		if(ioLocation.x >= yard.getWidth() || ioLocation.x <= 0)
-		{
-			switch (aNewSens) 
-			{
-			case 0:
-				iAgentRoute.setSens(ConstantesAgents.SUD);
-				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
-				break;
-			case 1:
-				iAgentRoute.setSens(ConstantesAgents.NORD);
-				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
-				break;
-			default:
-				break;
-			}
-		}
-		else if(ioLocation.y >= yard.getHeight() || ioLocation.y <= 0)
-		{
-			switch (aNewSens) 
-			{
-			case 0:
-				iAgentRoute.setSens(ConstantesAgents.EST);
-				ioLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
-				break;
-			case 1:
-				iAgentRoute.setSens(ConstantesAgents.OUEST);
-				ioLocation = new Int2D(iPrevAgent.getX()-1, iPrevAgent.getY());
-				break;
-			default:
-				break;
-			}
-		}
-		return ioLocation;
-	}
+//	private Int2D correctionTrajectoire(Int2D ioLocation, AgentEnvironnement iPrevAgent, AgentEnvironnement iCurrentAgent)
+//	{
+//		int aNewSens = random.nextInt(2);
+//		int aCst = 1; // Bordure
+//		
+//		if(ioLocation.x >= yard.getWidth()+aCst || ioLocation.x <= aCst)
+//		{
+//			switch (aNewSens) 
+//			{
+//			case 0:
+//				iCurrentAgent.setSens(ConstantesAgents.SUD);
+//				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
+//				break;
+//			case 1:
+//				iCurrentAgent.setSens(ConstantesAgents.NORD);
+//				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//		else if(ioLocation.y >= yard.getHeight()+aCst || ioLocation.y <= aCst)
+//		{
+//			switch (aNewSens)
+//			{
+//			case 0:
+//				iCurrentAgent.setSens(ConstantesAgents.EST);
+//				ioLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
+//				break;
+//			case 1:
+//				iCurrentAgent.setSens(ConstantesAgents.OUEST);
+//				ioLocation = new Int2D(iPrevAgent.getX()-1, iPrevAgent.getY());
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//		return ioLocation;
+//	}
 	
 	private Int2D getNewDirection(AgentEnvironnement iPrevAgent, AgentEnvironnement iCurAgent, int iNewSens)
 	{		

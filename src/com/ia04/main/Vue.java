@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import javax.swing.JFrame;
 
 import com.ia04.agents.AgentEnvironnement;
+import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesGenerales;
 
 import sim.display.Controller;
@@ -42,7 +43,9 @@ public class Vue extends GUIState {
 	{
 		Model aModel = (Model) state;
 		yardPortrayal.setField(aModel.getYard());
-		yardPortrayal.setPortrayalForClass(AgentEnvironnement.class, getAgentEnvPortrayal());
+		yardPortrayal.setPortrayalForClass(AgentEnvironnement.class, getAgentEnvPortrayal(0));
+//		yardPortrayal.setPortrayalForObject(new AgentEnvironnement(ConstantesAgents.TYPE_ROUTE, 0), getAgentEnvPortrayal(ConstantesAgents.TYPE_ROUTE));
+//		yardPortrayal.setPortrayalForObject(new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0), getAgentEnvPortrayal(ConstantesAgents.TYPE_EAU));
 		display.reset();
 		display.setBackdrop(Color.WHITE);
 		display.repaint();
@@ -60,9 +63,14 @@ public class Vue extends GUIState {
 		display.attach(yardPortrayal, "yard");
 	}
 	
-	public RectanglePortrayal2D getAgentEnvPortrayal()
+	public RectanglePortrayal2D getAgentEnvPortrayal(int iType)
 	{
-		RectanglePortrayal2D oOvPor2D = new RectanglePortrayal2D(Color.GRAY,1 , true);
-		return oOvPor2D;
+		RectanglePortrayal2D oRectPor2D = null;
+		System.out.println(iType);
+		if(iType == ConstantesAgents.TYPE_ROUTE || iType == 0)
+			oRectPor2D = new RectanglePortrayal2D(Color.GRAY, 1, true);
+		else if(iType == ConstantesAgents.TYPE_EAU)
+			oRectPor2D = new RectanglePortrayal2D(Color.BLUE, 1, true);
+		return oRectPor2D;
 	}
 }

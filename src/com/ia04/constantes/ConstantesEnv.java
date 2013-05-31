@@ -7,6 +7,6 @@ public class ConstantesEnv {
 	public static double PROP_HABITATION	= 0.15;
 	public static double PROP_ROCHE			= 0.05;
 	public static double PROP_EAU			= 0.10;
-	public static double PROP_ROUTE			= 0.05;
+	public static double PROP_ROUTE			= 0.025;
 	// ce sont des proportions donc la somme est 1 !
 }
