@@ -13,7 +13,9 @@ import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
+import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.SparseGridPortrayal2D;
+import sim.portrayal.simple.FacetedPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.simple.RectanglePortrayal2D;
 
@@ -43,9 +45,19 @@ public class Vue extends GUIState {
 	{
 		Model aModel = (Model) state;
 		yardPortrayal.setField(aModel.getYard());
-		yardPortrayal.setPortrayalForClass(AgentEnvironnement.class, getAgentEnvPortrayal(0));
-//		yardPortrayal.setPortrayalForObject(new AgentEnvironnement(ConstantesAgents.TYPE_ROUTE, 0), getAgentEnvPortrayal(ConstantesAgents.TYPE_ROUTE));
-//		yardPortrayal.setPortrayalForObject(new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0), getAgentEnvPortrayal(ConstantesAgents.TYPE_EAU));
+		yardPortrayal.setPortrayalForClass(AgentEnvironnement.class, new FacetedPortrayal2D(
+                new SimplePortrayal2D[]
+                {
+                		new RectanglePortrayal2D(new Color(173, 255, 47), 1, true), // TYPE_VEG_FAIBLE
+                		new RectanglePortrayal2D(new Color(34, 139, 34), 1, true), 	// TYPE_VEG_MOY 
+                		new RectanglePortrayal2D(new Color(0, 100, 0), 1, true), 	// TYPE_VEG_FORTE
+                		new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
+                		new RectanglePortrayal2D(new Color(255, 127, 36), 1, true), // TYPE_ROCHE
+                		new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
+                		new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
+                })
+		);
+
 		display.reset();
 		display.setBackdrop(Color.WHITE);
 		display.repaint();
@@ -61,16 +73,5 @@ public class Vue extends GUIState {
 		iController.registerFrame(displayFrame);
 		displayFrame.setVisible(true);
 		display.attach(yardPortrayal, "yard");
-	}
-	
-	public RectanglePortrayal2D getAgentEnvPortrayal(int iType)
-	{
-		RectanglePortrayal2D oRectPor2D = null;
-		System.out.println(iType);
-		if(iType == ConstantesAgents.TYPE_ROUTE || iType == 0)
-			oRectPor2D = new RectanglePortrayal2D(Color.GRAY, 1, true);
-		else if(iType == ConstantesAgents.TYPE_EAU)
-			oRectPor2D = new RectanglePortrayal2D(Color.BLUE, 1, true);
-		return oRectPor2D;
 	}
 }

@@ -7,6 +7,7 @@ import com.ia04.constantes.ConstantesGenerales;
 
 import sim.engine.SimState;
 import sim.field.grid.SparseGrid2D;
+import sim.util.Bag;
 import sim.util.Int2D;
 
 public class Model extends SimState {
@@ -30,42 +31,26 @@ public class Model extends SimState {
 
 	public void setEnvironnement() // Set les agents environnement uniquement
 	{
+		setVegetationFaible();
+		setEau();
+		setRoche();
+		setVegetationMoyenne();
+		setVegetationForte();
 		setRoute();
-//		setHabitation();
-//		setEau();
-//		setRoche();
-//		setVegetationFaible();
-//		setVegetationMoyenne();
-//		setVegetationForte();
+		setHabitation();
+		nettoyageEnvironnement();
 	}
 
-	public void setRoute()
+	public void setVegetationFaible()
 	{
-		int aNbRoute = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROUTE);
-		AgentEnvironnement aPrevAgent = null;
-
-		for(int i=0; i < aNbRoute; i++)
+		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
 		{
-			AgentEnvironnement aAgentRoute = new AgentEnvironnement(ConstantesAgents.TYPE_ROUTE, 0);
-			if(i==0)
+			for(int j=0; j<ConstantesGenerales.GRID_SIZE;j++)
 			{
-				Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), 0);
-				aAgentRoute.setSens(ConstantesAgents.SUD);
-				yard.setObjectLocation(aAgentRoute, aLocation);
-				aAgentRoute.setLocation(aLocation);
-				aPrevAgent = new AgentEnvironnement(aAgentRoute);
-			}
-			else
-			{
-				int aRandomCste = 100;
-				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner environ 2/aRandomCste
-				Int2D aLocationStep1 = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
-//				aLocation = correctionTrajectoire(aLocation, aPrevAgent, aAgentRoute);
-				Int2D aLocationFinal = new Int2D(yard.stx(aLocationStep1.x), yard.sty(aLocationStep1.y));
-				yard.setObjectLocation(aAgentRoute, aLocationFinal);
-				yard.setObjectLocation(aAgentRoute, aLocationFinal);
-				aAgentRoute.setLocation(aLocationFinal);
-				aPrevAgent = aAgentRoute;
+				AgentEnvironnement aAgentVegetation = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_FAIBLE, 0);
+				Int2D aLocation = new Int2D(i, j);
+				yard.setObjectLocation(aAgentVegetation, aLocation);
+				aAgentVegetation.setLocation(aLocation);
 			}
 		}
 	}
@@ -88,10 +73,9 @@ public class Model extends SimState {
 			}
 			else
 			{
-				int aRandomCste = 100;
+				int aRandomCste = 50;
 				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner environ 2/aRandomCste
 				Int2D aLocationStep1 = getNewDirection(aPrevAgent, aAgentEau, aNewSens);
-//				aLocation = correctionTrajectoire(aLocation, aPrevAgent, aAgentEau);
 				Int2D aLocationFinal = new Int2D(yard.stx(aLocationStep1.x),yard.sty(aLocationStep1.y));
 				yard.setObjectLocation(aAgentEau, aLocationFinal);
 				aAgentEau.setLocation(aLocationFinal);
@@ -100,89 +84,115 @@ public class Model extends SimState {
 		}
 	}
 
-//	public void setEau()
-//	{
-//		int aNbEau = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_EAU);
-//		int sens = ConstantesAgents.NORD;
-//		int steps = 1;
-//		AgentEnvironnement aPrevAgent = null;
-//
-//		for(int i=0; i<aNbEau;i++)
-//		{
-//			if(i==0)
-//			{
-//				AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
-//				Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
-//				aAgentEau.setSens(ConstantesAgents.NORD);		
-//				yard.setObjectLocation(aAgentEau, aLocation);	
-//				aAgentEau.setLocation(aLocation);
-//				aPrevAgent = new AgentEnvironnement(aAgentEau);
-//			}
-//			else
-//			{
-//				for(int j = 0;j<steps;j++){
-//					AgentEnvironnement aAgentEau = new AgentEnvironnement(ConstantesAgents.TYPE_EAU, 0);
-//					Int2D aLocation = getNewDirection(aPrevAgent, aAgentEau, sens);	
-//					yard.setObjectLocation(aAgentEau, aLocation);
-//					aAgentEau.setLocation(aLocation);
-//					aPrevAgent = aAgentEau;
-//
-//				}
-//			}
-//			sens++;
-//			if(sens == 5){
-//				sens = 1; 
-//			}
-//			if(i%2 == 0){
-//				steps++;
-//			}
-//		}
-//
-//	}
+	public void setRoche()
+	{
+		int aNbRoche = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_MOY);
+
+		for(int i=0; i < aNbRoche; i++)
+		{
+			AgentEnvironnement aAgentRoche = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_MOY, 0);
+			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
+			yard.setObjectLocation(aAgentRoche, aLocation);
+			aAgentRoche.setLocation(aLocation);
+		}
+	}
 	
-//	private Int2D correctionTrajectoire(Int2D ioLocation, AgentEnvironnement iPrevAgent, AgentEnvironnement iCurrentAgent)
-//	{
-//		int aNewSens = random.nextInt(2);
-//		int aCst = 1; // Bordure
-//		
-//		if(ioLocation.x >= yard.getWidth()+aCst || ioLocation.x <= aCst)
-//		{
-//			switch (aNewSens) 
-//			{
-//			case 0:
-//				iCurrentAgent.setSens(ConstantesAgents.SUD);
-//				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
-//				break;
-//			case 1:
-//				iCurrentAgent.setSens(ConstantesAgents.NORD);
-//				ioLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//		else if(ioLocation.y >= yard.getHeight()+aCst || ioLocation.y <= aCst)
-//		{
-//			switch (aNewSens)
-//			{
-//			case 0:
-//				iCurrentAgent.setSens(ConstantesAgents.EST);
-//				ioLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
-//				break;
-//			case 1:
-//				iCurrentAgent.setSens(ConstantesAgents.OUEST);
-//				ioLocation = new Int2D(iPrevAgent.getX()-1, iPrevAgent.getY());
-//				break;
-//			default:
-//				break;
-//			}
-//		}
-//		return ioLocation;
-//	}
+	public void setVegetationMoyenne()
+	{
+		int aNbVegMoy = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROCHE);
+
+		for(int i=0; i < aNbVegMoy; i++)
+		{
+			AgentEnvironnement aAgentVegMoy = new AgentEnvironnement(ConstantesAgents.TYPE_ROCHE, 0);
+			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
+			yard.setObjectLocation(aAgentVegMoy, aLocation);
+			aAgentVegMoy.setLocation(aLocation);
+		}
+	}
+	
+	public void setVegetationForte()
+	{
+		int aNbVegForte = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_FORTE);
+
+		for(int i=0; i < aNbVegForte; i++)
+		{
+			AgentEnvironnement aAgentVegForte = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_FORTE, 0);
+			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
+			yard.setObjectLocation(aAgentVegForte, aLocation);
+			aAgentVegForte.setLocation(aLocation);
+		}
+	}
+	
+	public void setRoute()
+	{
+		int aNbRoute = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROUTE);
+		AgentEnvironnement aPrevAgent = null;
+
+		for(int i=0; i < aNbRoute; i++)
+		{
+			AgentEnvironnement aAgentRoute = new AgentEnvironnement(ConstantesAgents.TYPE_ROUTE, 0);
+			if(i==0)
+			{
+				Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), 0);
+				aAgentRoute.setSens(ConstantesAgents.SUD);
+				yard.setObjectLocation(aAgentRoute, aLocation);
+				aAgentRoute.setLocation(aLocation);
+				aPrevAgent = new AgentEnvironnement(aAgentRoute);
+			}
+			else
+			{
+				int aRandomCste = 100;
+				int aNewSens = random.nextInt(aRandomCste); // Proba de tourner : 2/aRandomCste
+				Int2D aLocationStep1 = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
+				Int2D aLocationFinal = new Int2D(yard.stx(aLocationStep1.x), yard.sty(aLocationStep1.y));
+				yard.setObjectLocation(aAgentRoute, aLocationFinal);
+				yard.setObjectLocation(aAgentRoute, aLocationFinal);
+				aAgentRoute.setLocation(aLocationFinal);
+				aPrevAgent = aAgentRoute;
+			}
+		}
+	}
+	
+	public void setHabitation()
+	{
+		int aNbHab = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_HABITATION);
+		System.out.println(aNbHab);
+		for(int i=0; i < aNbHab; i++)
+		{
+			AgentEnvironnement aAgentHab = new AgentEnvironnement(ConstantesAgents.TYPE_HABITATION, 0);
+			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
+			yard.setObjectLocation(aAgentHab, aLocation);
+			aAgentHab.setLocation(aLocation);
+		}
+	}
+	
+	public void nettoyageEnvironnement()
+	{
+		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
+		{
+			for(int j=0; j<ConstantesGenerales.GRID_SIZE;j++)
+			{
+				if(yard.numObjectsAtLocation(i, j) > 1) // Conflit entre objets
+				{
+					Int2D aLocation = new Int2D(i, j);
+					Bag aAgentsEnv = yard.getObjectsAtLocation(aLocation);
+					AgentEnvironnement aAgentEnv = (AgentEnvironnement) aAgentsEnv.get(0);
+					for(Object aAgent : aAgentsEnv) // Selection de l'agent restant
+					{
+//						System.out.println(aAgent.toString());
+						AgentEnvironnement aAgentTmp = (AgentEnvironnement) aAgent;
+						if(aAgentEnv.getType() < aAgentTmp.getType())
+							aAgentEnv = aAgentTmp;
+					}
+					yard.removeObjectsAtLocation(aLocation);
+					yard.setObjectLocation(aAgentEnv, aLocation);
+				}
+			}
+		}
+	}
 	
 	private Int2D getNewDirection(AgentEnvironnement iPrevAgent, AgentEnvironnement iCurAgent, int iNewSens)
-	{		
-//		System.out.println(iNewSens);
+	{
 		Int2D oLocation = null;
 
 		boolean aSud = (iPrevAgent.getSens() == ConstantesAgents.SUD && iNewSens > 1) || 
@@ -199,25 +209,21 @@ public class Model extends SimState {
 
 		if(aSud) // SUD
 		{
-//			System.out.println("sud");
 			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()+1);
 			iCurAgent.setSens(ConstantesAgents.SUD);
 		}
 		else if (aNord) // NORD
 		{
-//			System.out.println("NORD");
 			oLocation = new Int2D(iPrevAgent.getX(), iPrevAgent.getY()-1);
 			iCurAgent.setSens(ConstantesAgents.NORD);			
 		}
 		else if (aEst) //EST
 		{
-//			System.out.println("EST");
 			oLocation = new Int2D(iPrevAgent.getX()+1, iPrevAgent.getY());
 			iCurAgent.setSens(ConstantesAgents.EST);
 		}
 		else if(aOuest) // OUEST
 		{
-//			System.out.println("OUEST");
 			oLocation = new Int2D(iPrevAgent.getX()-1, iPrevAgent.getY());
 			iCurAgent.setSens(ConstantesAgents.OUEST);
 
@@ -236,8 +242,4 @@ public class Model extends SimState {
 	public SparseGrid2D getYard() {
 		return yard;
 	}
-
-	//	public void setYard(SparseGrid2D yard) {
-	//		this.yard = yard;
-	//	}
 }

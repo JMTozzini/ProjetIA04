@@ -5,8 +5,9 @@ import com.ia04.constantes.ConstantesAgents;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.util.Int2D;
+import sim.util.Valuable;
 
-public class AgentEnvironnement implements Steppable {
+public class AgentEnvironnement implements Steppable, Valuable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -65,6 +66,11 @@ public class AgentEnvironnement implements Steppable {
 			inflammable = false;
 			break;
 		}
+	}
+
+	@Override
+	public double doubleValue() {
+		return (type-1); // 0 -> 6
 	}
 
 	public void step(SimState iModel) {
