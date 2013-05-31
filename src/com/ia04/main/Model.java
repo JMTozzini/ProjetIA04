@@ -1,6 +1,7 @@
 package com.ia04.main;
 
 import com.ia04.agents.AgentEnvironnement;
+import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesEnv;
 import com.ia04.constantes.ConstantesGenerales;
@@ -29,7 +30,7 @@ public class Model extends SimState {
 		setAgents();
 	}
 
-	public void setEnvironnement() // Set les agents environnement uniquement
+	private void setEnvironnement() // Set les agents environnement uniquement
 	{
 		setVegetationFaible();
 		setEau();
@@ -41,7 +42,7 @@ public class Model extends SimState {
 		nettoyageEnvironnement();
 	}
 
-	public void setVegetationFaible()
+	private void setVegetationFaible()
 	{
 		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
 		{
@@ -55,7 +56,7 @@ public class Model extends SimState {
 		}
 	}
 	
-	public void setEau()
+	private void setEau()
 	{
 		int aNbEau = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_EAU);
 		AgentEnvironnement aPrevAgent = null;
@@ -84,7 +85,7 @@ public class Model extends SimState {
 		}
 	}
 
-	public void setRoche()
+	private void setRoche()
 	{
 		int aNbRoche = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_MOY);
 
@@ -97,7 +98,7 @@ public class Model extends SimState {
 		}
 	}
 	
-	public void setVegetationMoyenne()
+	private void setVegetationMoyenne()
 	{
 		int aNbVegMoy = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROCHE);
 
@@ -110,7 +111,7 @@ public class Model extends SimState {
 		}
 	}
 	
-	public void setVegetationForte()
+	private void setVegetationForte()
 	{
 		int aNbVegForte = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_FORTE);
 
@@ -123,7 +124,7 @@ public class Model extends SimState {
 		}
 	}
 	
-	public void setRoute()
+	private void setRoute()
 	{
 		int aNbRoute = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROUTE);
 		AgentEnvironnement aPrevAgent = null;
@@ -153,10 +154,10 @@ public class Model extends SimState {
 		}
 	}
 	
-	public void setHabitation()
+	private void setHabitation()
 	{
 		int aNbHab = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_HABITATION);
-		System.out.println(aNbHab);
+
 		for(int i=0; i < aNbHab; i++)
 		{
 			AgentEnvironnement aAgentHab = new AgentEnvironnement(ConstantesAgents.TYPE_HABITATION, 0);
@@ -166,7 +167,7 @@ public class Model extends SimState {
 		}
 	}
 	
-	public void nettoyageEnvironnement()
+	private void nettoyageEnvironnement()
 	{
 		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
 		{
@@ -234,9 +235,28 @@ public class Model extends SimState {
 		return oLocation;
 	}
 
-	public void setAgents() // Set les agents autres que environnement
+	private void setAgents() // Set les agents autres que environnement
 	{
-
+		setFeu();
+	}
+	
+	private void setFeu()
+	{
+		boolean aValide = false;
+		AgentFeu aAgentFeu = new AgentFeu(ConstantesEnv.FEU_FORCE, ConstantesEnv.FEU_RES);
+		do
+		{
+			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getWidth()));
+			Bag aAgents = yard.getObjectsAtLocation(aLocation);
+			AgentEnvironnement aAgentEnv = (AgentEnvironnement) aAgents.get(0); // unique 
+			if(aAgentEnv.isInflammable())
+			{
+				yard.setObjectLocation(aAgentFeu, aLocation);
+				aAgentFeu.setLocation(aLocation);
+				aValide = true;
+			}			
+		}while(!aValide);
+		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
 	}
 
 	public SparseGrid2D getYard() {

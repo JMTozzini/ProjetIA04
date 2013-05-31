@@ -12,8 +12,8 @@ public class AgentEnvironnement implements Steppable, Valuable {
 	private static final long serialVersionUID = 1L;
 	
 	// Position
-	private int x=0;
-	private int y=0;
+	private int x=-1;
+	private int y=-1;
 		
 	// Attributs
 	private int type;

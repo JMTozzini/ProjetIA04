@@ -1,12 +1,11 @@
 package com.ia04.main;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
 import com.ia04.agents.AgentEnvironnement;
-import com.ia04.constantes.ConstantesAgents;
+import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesGenerales;
 
 import sim.display.Controller;
@@ -49,24 +48,26 @@ public class Vue extends GUIState {
                 new SimplePortrayal2D[]
                 {
                 		new RectanglePortrayal2D(new Color(173, 255, 47), 1, true), // TYPE_VEG_FAIBLE
-                		new RectanglePortrayal2D(new Color(34, 139, 34), 1, true), 	// TYPE_VEG_MOY 
-                		new RectanglePortrayal2D(new Color(0, 100, 0), 1, true), 	// TYPE_VEG_FORTE
-                		new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
                 		new RectanglePortrayal2D(new Color(255, 127, 36), 1, true), // TYPE_ROCHE
+                		new OvalPortrayal2D(new Color(34, 139, 34), 1, true), 		// TYPE_VEG_MOY 
+                		new OvalPortrayal2D(new Color(0, 100, 0), 1, true), 		// TYPE_VEG_FORTE
+                		new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
                 		new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
                 		new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
+                		// Ordre inversement liée à l'importance (plus important en dernier)
                 })
 		);
-
+		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
+		
 		display.reset();
-		display.setBackdrop(Color.WHITE);
+		display.setBackdrop(new Color(173, 255, 47));
 		display.repaint();
 	}
 	
 	public void init(Controller iController)
 	{
 		super.init(iController);
-		display = new Display2D(ConstantesGenerales.FRAME_SIZE, ConstantesGenerales.FRAME_SIZE, this);
+		display = new Display2D(ConstantesGenerales.FRAME_WIDTH, ConstantesGenerales.FRAME_HEIGHT, this);
 		display.setClipping(false);
 		displayFrame = display.createFrame();
 		displayFrame.setTitle("simulateur d'incendie");

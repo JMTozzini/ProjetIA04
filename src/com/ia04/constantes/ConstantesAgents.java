@@ -10,6 +10,7 @@ public class ConstantesAgents {
 	public static int TYPE_HABITATION	= 5;
 	public static int TYPE_EAU			= 6;
 	public static int TYPE_ROUTE		= 7;
+	// !!! L'ordre de ces attribut influence l'ordre du FacetedPortrayal2D dans la vue !!!
 	
 	// Resistances interne liées au type
 	public static int RES_INT_VEG_FAIBLE	= 10;
