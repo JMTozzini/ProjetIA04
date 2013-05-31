@@ -44,9 +44,9 @@ public class Model extends SimState {
 
 	private void setVegetationFaible()
 	{
-		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
+		for(int i=0; i<ConstantesGenerales.GRID_SIZE; i++)
 		{
-			for(int j=0; j<ConstantesGenerales.GRID_SIZE;j++)
+			for(int j=0; j<ConstantesGenerales.GRID_SIZE; j++)
 			{
 				AgentEnvironnement aAgentVegetation = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_FAIBLE, 0);
 				Int2D aLocation = new Int2D(i, j);
@@ -87,11 +87,11 @@ public class Model extends SimState {
 
 	private void setRoche()
 	{
-		int aNbRoche = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_MOY);
+		int aNbRoche = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROCHE);
 
 		for(int i=0; i < aNbRoche; i++)
 		{
-			AgentEnvironnement aAgentRoche = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_MOY, 0);
+			AgentEnvironnement aAgentRoche = new AgentEnvironnement(ConstantesAgents.TYPE_ROCHE, 0);
 			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
 			yard.setObjectLocation(aAgentRoche, aLocation);
 			aAgentRoche.setLocation(aLocation);
@@ -100,11 +100,11 @@ public class Model extends SimState {
 	
 	private void setVegetationMoyenne()
 	{
-		int aNbVegMoy = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROCHE);
+		int aNbVegMoy = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_MOY);
 
 		for(int i=0; i < aNbVegMoy; i++)
 		{
-			AgentEnvironnement aAgentVegMoy = new AgentEnvironnement(ConstantesAgents.TYPE_ROCHE, 0);
+			AgentEnvironnement aAgentVegMoy = new AgentEnvironnement(ConstantesAgents.TYPE_VEG_MOY, 0);
 			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getHeight()));
 			yard.setObjectLocation(aAgentVegMoy, aLocation);
 			aAgentVegMoy.setLocation(aLocation);
@@ -256,7 +256,8 @@ public class Model extends SimState {
 				aValide = true;
 			}			
 		}while(!aValide);
-		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
+		schedule.scheduleOnce(aAgentFeu);
+//		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
 	}
 
 	public SparseGrid2D getYard() {

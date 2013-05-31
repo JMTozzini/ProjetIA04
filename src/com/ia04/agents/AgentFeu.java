@@ -1,8 +1,11 @@
 package com.ia04.agents;
 
+import com.ia04.main.Model;
+
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.engine.Stoppable;
+import sim.util.Bag;
 import sim.util.Int2D;
 
 public class AgentFeu implements Steppable {
@@ -30,7 +33,13 @@ public class AgentFeu implements Steppable {
 
 	@Override
 	public void step(SimState iState) {
-		System.out.println("action");
+		Model aModel = (Model) iState;
+		Bag aAgents = aModel.getYard().getNeighborsMaxDistance(x, y, 1, false, null, null, null);
+		for(Object i: aAgents)
+		{
+			if(i != this)
+				System.out.println(i.toString());
+		}
 	}
 
 
