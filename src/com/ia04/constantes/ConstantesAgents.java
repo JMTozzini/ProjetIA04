@@ -30,5 +30,27 @@ public class ConstantesAgents {
 	public static int EST	= 3;
 	public static int OUEST	= 4;
 	
+	// Nombres Agents Pompiers
+	public static int NB_CAMION            = 3;
+	public static int NB_PIETON_PAR_CAMION = 5;
+	public static int NB_CANDAIR           = 2;
+	
+	// Resistance Pompiers
+	public static int RES_PIETON   = 100;
+	public static int RES_CAMION   = 1000;
+	public static int RES_CANADAIR = 10000;
+	
+	// Déplacement Pompiers
+	public static int DEP_PIETON   = 5;
+	public static int DEP_CAMION   = 30;
+	public static int DEP_CANADAIR = 60;
+	
+	// Force Pompiers
+	public static int FORCE_PIETON   = 2;
+	public static int FORCE_CAMION   = 5;
+	public static int FORCE_CANADAIR = 10;
+	
+	
+	
 	
 }

@@ -238,6 +238,7 @@ public class Model extends SimState {
 	private void setAgents() // Set les agents autres que environnement
 	{
 		setFeu();
+		setPompier();
 	}
 	
 	private void setFeu()
@@ -258,6 +259,11 @@ public class Model extends SimState {
 		}while(!aValide);
 		schedule.scheduleOnce(aAgentFeu);
 //		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
+	}
+	
+	private void setPompier(){
+		// setCamion();
+		// setCanadair();
 	}
 
 	public SparseGrid2D getYard() {
