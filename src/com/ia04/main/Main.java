@@ -10,5 +10,4 @@ public class Main {
 		Console gConsole = new Console(gVue);
 		gConsole.setVisible(true);
 	}
-
 }

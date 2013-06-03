@@ -1,5 +1,6 @@
 package com.ia04.agents;
 
+import com.ia04.constantes.ConstantesEnv;
 import com.ia04.main.Model;
 
 import sim.engine.SimState;
@@ -31,14 +32,41 @@ public class AgentFeu implements Steppable {
 	}
 
 
-	@Override
 	public void step(SimState iState) {
 		Model aModel = (Model) iState;
 		Bag aAgents = aModel.getYard().getNeighborsMaxDistance(x, y, 1, false, null, null, null);
 		for(Object i: aAgents)
-		{
-			if(i != this)
-				System.out.println(i.toString());
+		{		
+			if(!(i instanceof AgentFeu)) // Pas un agentFeu
+			{
+				AgentEnvironnement aAgentEnv = (AgentEnvironnement)i;
+				if(aAgentEnv.isInflammable())
+				{
+					// Feu et AgentEnv inflammable sur la même case
+					if(aAgentEnv.getX() == this.getX() && aAgentEnv.getY() == this.getY())
+					{
+						aAgentEnv.reduceResInterne(this.getForce());
+						if(aAgentEnv.getResInterne()==0) // Destruction du feu car plus rien a bruler
+						{
+							this.getStp().stop();
+							aModel.getYard().removeObjectsAtLocation(this.getX(), this.getY());
+						}
+					}
+					// AgentEnv inflammable adjacent du Feu
+					else if(aAgentEnv.getX()!=this.getX() || aAgentEnv.getY()!=this.getY())
+					{
+						aAgentEnv.reduceResExterne(this.getForce());
+						if(aAgentEnv.getResExterne()==0) // Destruction du feu car plus rien a bruler
+						{
+							Int2D aLocation = new Int2D(aAgentEnv.getX(), aAgentEnv.getY());
+							AgentFeu aAgentFeu = new AgentFeu(ConstantesEnv.FEU_FORCE, ConstantesEnv.FEU_RES);
+							aAgentFeu.setLocation(aLocation);
+							aModel.getYard().setObjectLocation(aAgentFeu, aLocation);
+							aAgentFeu.setStp(aModel.schedule.scheduleRepeating(aAgentFeu));
+						}
+					}
+				}
+			}
 		}
 	}
 

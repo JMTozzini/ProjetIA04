@@ -1,5 +1,7 @@
 package com.ia04.main;
 
+import java.beans.PropertyChangeSupport;
+
 import com.ia04.agents.AgentEnvironnement;
 import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesAgents;
@@ -7,6 +9,7 @@ import com.ia04.constantes.ConstantesEnv;
 import com.ia04.constantes.ConstantesGenerales;
 
 import sim.engine.SimState;
+import sim.engine.Stoppable;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Bag;
 import sim.util.Int2D;
@@ -16,10 +19,12 @@ public class Model extends SimState {
 	private static final long serialVersionUID = 1L;
 
 	private SparseGrid2D yard;
+	PropertyChangeSupport pcs= new PropertyChangeSupport(this);
 
 	public Model(long iSeed) {
 		super(iSeed);
 		yard = new SparseGrid2D(ConstantesGenerales.GRID_SIZE, ConstantesGenerales.GRID_SIZE);
+		pcs = new PropertyChangeSupport(this);
 	}
 
 	public void start()
@@ -40,6 +45,7 @@ public class Model extends SimState {
 		setRoute();
 		setHabitation();
 		nettoyageEnvironnement();
+		ajoutSchedule();
 	}
 
 	private void setVegetationFaible()
@@ -180,13 +186,32 @@ public class Model extends SimState {
 					AgentEnvironnement aAgentEnv = (AgentEnvironnement) aAgentsEnv.get(0);
 					for(Object aAgent : aAgentsEnv) // Selection de l'agent restant
 					{
-//						System.out.println(aAgent.toString());
 						AgentEnvironnement aAgentTmp = (AgentEnvironnement) aAgent;
 						if(aAgentEnv.getType() < aAgentTmp.getType())
 							aAgentEnv = aAgentTmp;
 					}
-					yard.removeObjectsAtLocation(aLocation);
+					yard.removeObjectsAtLocation(aLocation.x, aLocation.y);
 					yard.setObjectLocation(aAgentEnv, aLocation);
+				}
+			}
+		}
+	}
+	
+	private void ajoutSchedule()
+	{
+		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
+		{
+			for(int j=0; j<ConstantesGenerales.GRID_SIZE;j++)
+			{
+				Int2D aLocation = new Int2D(i, j);
+				Bag aAgentsEnv = yard.getObjectsAtLocation(aLocation);
+				AgentEnvironnement aAgentEnv = (AgentEnvironnement) aAgentsEnv.get(0);
+				if(aAgentEnv.isInflammable())
+				{
+					Stoppable aStop = schedule.scheduleRepeating(aAgentEnv);
+					if(aStop==null)
+						System.out.println("problème !");
+					aAgentEnv.setStp(aStop);						
 				}
 			}
 		}
@@ -257,8 +282,7 @@ public class Model extends SimState {
 				aValide = true;
 			}			
 		}while(!aValide);
-		schedule.scheduleOnce(aAgentFeu);
-//		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
+		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
 	}
 	
 	private void setPompier(){
@@ -268,5 +292,10 @@ public class Model extends SimState {
 
 	public SparseGrid2D getYard() {
 		return yard;
+	}
+
+	
+	public PropertyChangeSupport getPcs() {
+		return pcs;
 	}
 }

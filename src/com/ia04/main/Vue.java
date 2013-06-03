@@ -1,6 +1,8 @@
 package com.ia04.main;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
 
@@ -18,7 +20,7 @@ import sim.portrayal.simple.FacetedPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.simple.RectanglePortrayal2D;
 
-public class Vue extends GUIState {
+public class Vue extends GUIState{
 
 	private Display2D display;
 	private JFrame displayFrame;
@@ -54,13 +56,14 @@ public class Vue extends GUIState {
                 		new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
                 		new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
                 		new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
+                		new OvalPortrayal2D(Color.BLACK, 1, true),					// TYPE_BRULE
                 		// Ordre inversement liée à l'importance (plus important en dernier)
                 })
 		);
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
 		
 		display.reset();
-		display.setBackdrop(new Color(173, 255, 47));
+		display.setBackdrop(Color.WHITE/*new Color(173, 255, 47)*/);
 		display.repaint();
 	}
 	

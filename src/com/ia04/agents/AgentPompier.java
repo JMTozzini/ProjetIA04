@@ -26,8 +26,8 @@ public abstract class AgentPompier implements Steppable {
 		force = iForce;
 	}
 	
-	@Override
-	public abstract void step(SimState iModel);
+	public void step(SimState iModel){
+	}
 	
 	protected void survivre(){
 		// TODO
