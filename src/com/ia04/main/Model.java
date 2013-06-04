@@ -209,8 +209,6 @@ public class Model extends SimState {
 				if(aAgentEnv.isInflammable())
 				{
 					Stoppable aStop = schedule.scheduleRepeating(aAgentEnv);
-					if(aStop==null)
-						System.out.println("problème !");
 					aAgentEnv.setStp(aStop);						
 				}
 			}

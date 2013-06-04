@@ -1,7 +1,6 @@
 package com.ia04.agents;
 
 import com.ia04.constantes.ConstantesAgents;
-import com.ia04.constantes.ConstantesEnv;
 import com.ia04.main.Model;
 
 import sim.engine.SimState;
@@ -81,25 +80,19 @@ public class AgentEnvironnement implements Steppable, Valuable {
 	}
 
 	public void step(SimState iModel) {
-		if(stp!=null)
+		if(stp==null)
 			System.out.println(this.toString() + " stp null");
 		
-//		Model aModel = (Model) iModel;
-//		if(this.isInflammable() && this.resInterne == 0 && this.getType() != ConstantesAgents.TYPE_BRULE)
-//		{
-//			AgentEnvironnement aAgentEnv = new AgentEnvironnement(ConstantesAgents.TYPE_BRULE, 0);
-//			Int2D aLocation = new Int2D(this.getX(), this.getY());if(this.stp!=null)
-//			if(stp!=null)
-//			{
-//				this.stp.stop();
-////				System.out.println(this.toString());
-//			}
-//			aModel.getYard().removeObjectsAtLocation(aLocation.x, aLocation.y);
-//			aAgentEnv.setLocation(aLocation);
-//			aModel.getYard().setObjectLocation(aAgentEnv, aLocation);
-//			Stoppable aStop = aModel.schedule.scheduleRepeating(aAgentEnv);
-//			aAgentEnv.setStp(aStop);
-//		}
+		Model aModel = (Model) iModel;
+		if(this.isInflammable() && this.resInterne == 0 && this.getType() != ConstantesAgents.TYPE_BRULE)
+		{
+			AgentEnvironnement aAgentEnv = new AgentEnvironnement(ConstantesAgents.TYPE_BRULE, 0);
+			Int2D aLocation = new Int2D(this.getX(), this.getY());if(this.stp!=null)
+			this.stp.stop();
+			aModel.getYard().removeObjectsAtLocation(aLocation.x, aLocation.y);
+			aAgentEnv.setLocation(aLocation);
+			aModel.getYard().setObjectLocation(aAgentEnv, aLocation);
+		}
 	}
 
 	public int getType() {
@@ -183,7 +176,6 @@ public class AgentEnvironnement implements Steppable, Valuable {
 	}
 
 	public void setStp(Stoppable stp) {
-		System.out.println("setStp");
 		this.stp = stp;
 	}
 	

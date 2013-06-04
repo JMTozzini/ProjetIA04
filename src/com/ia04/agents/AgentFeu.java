@@ -46,7 +46,7 @@ public class AgentFeu implements Steppable {
 					if(aAgentEnv.getX() == this.getX() && aAgentEnv.getY() == this.getY())
 					{
 						aAgentEnv.reduceResInterne(this.getForce());
-						if(aAgentEnv.getResInterne()==0) // Destruction du feu car plus rien a bruler
+						if(aAgentEnv.getResInterne()==0) // Destruction du Feu car plus rien a bruler
 						{
 							this.getStp().stop();
 							aModel.getYard().removeObjectsAtLocation(this.getX(), this.getY());
@@ -56,9 +56,9 @@ public class AgentFeu implements Steppable {
 					else if(aAgentEnv.getX()!=this.getX() || aAgentEnv.getY()!=this.getY())
 					{
 						aAgentEnv.reduceResExterne(this.getForce());
-						if(aAgentEnv.getResExterne()==0) // Destruction du feu car plus rien a bruler
+						Int2D aLocation = new Int2D(aAgentEnv.getX(), aAgentEnv.getY());
+						if(aAgentEnv.getResExterne()==0 && aModel.getYard().numObjectsAtLocation(aLocation)==1) // Expansion du Feu
 						{
-							Int2D aLocation = new Int2D(aAgentEnv.getX(), aAgentEnv.getY());
 							AgentFeu aAgentFeu = new AgentFeu(ConstantesEnv.FEU_FORCE, ConstantesEnv.FEU_RES);
 							aAgentFeu.setLocation(aLocation);
 							aModel.getYard().setObjectLocation(aAgentFeu, aLocation);

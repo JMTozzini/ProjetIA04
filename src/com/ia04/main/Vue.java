@@ -1,8 +1,6 @@
 package com.ia04.main;
 
 import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
 
@@ -15,10 +13,12 @@ import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
 import sim.portrayal.SimplePortrayal2D;
+import sim.portrayal.grid.DrawPolicy;
 import sim.portrayal.grid.SparseGridPortrayal2D;
 import sim.portrayal.simple.FacetedPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.simple.RectanglePortrayal2D;
+import sim.util.Bag;
 
 public class Vue extends GUIState{
 
@@ -61,9 +61,23 @@ public class Vue extends GUIState{
                 })
 		);
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
-		
+		yardPortrayal.setDrawPolicy(new DrawPolicy() { // Afficage de l'agent Feu prioritaire
+			public boolean objectToDraw(Bag iBag, Bag oBag) {
+				for(Object aAgent : iBag)
+				{
+					if(aAgent instanceof AgentFeu)
+						oBag.add(aAgent);
+				}
+				for(Object aAgent : iBag)
+				{
+					if(!(aAgent instanceof AgentFeu))
+						oBag.add(aAgent);
+				}
+				return false;
+			}
+		});
 		display.reset();
-		display.setBackdrop(Color.WHITE/*new Color(173, 255, 47)*/);
+		display.setBackdrop(/*Color.WHITE*/new Color(173, 255, 47));
 		display.repaint();
 	}
 	
@@ -79,3 +93,4 @@ public class Vue extends GUIState{
 		display.attach(yardPortrayal, "yard");
 	}
 }
+	
