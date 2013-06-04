@@ -27,7 +27,8 @@ public class Vue extends GUIState{
 	private Display2D display, displayChart;
 	private JFrame displayFrame, chartFrame;
 	private SparseGridPortrayal2D yardPortrayal;
-	private org.jfree.data.xy.XYSeries series;    // les données à afficher sur le chart
+	private org.jfree.data.xy.XYSeries seriesFire;    // les données à afficher sur le chart
+	private org.jfree.data.xy.XYSeries seriesBurnt;    // les données à afficher sur le chart
 	private sim.util.media.chart.TimeSeriesChartGenerator chart;  // le chart de monitoring
 
 	public Vue(SimState iState) {
@@ -89,29 +90,29 @@ public class Vue extends GUIState{
 	@SuppressWarnings("serial")
 	private void setupChart() {
 		chart.removeAllSeries();
-		series = new org.jfree.data.xy.XYSeries(
+		seriesFire = new org.jfree.data.xy.XYSeries(
 				"FireSeries",
 				false);
-		chart.addSeries(series, null);
+		seriesBurnt = new org.jfree.data.xy.XYSeries(
+				"BurntSeries",
+				false);
+		chart.addSeries(seriesFire, null);
+		chart.addSeries(seriesBurnt, null);
 		scheduleRepeatingImmediatelyAfter(new Steppable()
 		{
 			public void step(SimState state)
 			{
-				// at this stage we're adding data to our chart.  We
-				// need an X value and a Y value.  Typically the X
-				// value is the schedule's timestamp.  The Y value
-				// is whatever data you're extracting from your 
-				// simulation.  For purposes of illustration, let's
-				// extract the number of steps from the schedule and
-				// run it through a sin wave.
+				Model aModel = (Model) state;
 
-				double x = state.schedule.getTime();
-				double y = Math.sin(state.schedule.getSteps()) * 10;
+				double time = state.schedule.getTime();
+				double nbFire = aModel.getNbFire();
+				double nbBurnt = aModel.getNbBurnt();
 
 				// now add the data
-				if (x >= Schedule.EPOCH && x < Schedule.AFTER_SIMULATION)
+				if (time >= Schedule.EPOCH && time < Schedule.AFTER_SIMULATION)
 				{
-					series.add(x, y, true);
+					seriesFire.add(time, nbFire, true);
+					seriesBurnt.add(time, nbBurnt, true);
 
 					// we're in the model thread right now, so we shouldn't directly
 					// update the chart.  Instead we request an update to occur the next
@@ -135,11 +136,11 @@ public class Vue extends GUIState{
 
 
 
-		displayChart = new Display2D(ConstantesGenerales.FRAME_WIDTH, ConstantesGenerales.FRAME_HEIGHT, this);
+		displayChart = new Display2D(ConstantesGenerales.CHART_FRAME_WIDTH, ConstantesGenerales.FRAME_HEIGHT, this);
 		chart = new sim.util.media.chart.TimeSeriesChartGenerator();
 		chart.setTitle("Title");
-		chart.setXAxisLabel("Series");
-		chart.setYAxisLabel("Time");
+		chart.setXAxisLabel("Time");
+		chart.setYAxisLabel("Cases");
 		
 		
 		chartFrame = displayChart.createFrame();

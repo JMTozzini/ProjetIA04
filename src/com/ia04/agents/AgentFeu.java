@@ -48,6 +48,8 @@ public class AgentFeu implements Steppable {
 						aAgentEnv.reduceResInterne(this.getForce());
 						if(aAgentEnv.getResInterne()==0) // Destruction du Feu car plus rien a bruler
 						{
+							aModel.incNbBurnt();
+							aModel.decNbFire();
 							this.getStp().stop();
 							aModel.getYard().removeObjectsAtLocation(this.getX(), this.getY());
 						}
@@ -63,6 +65,7 @@ public class AgentFeu implements Steppable {
 							aAgentFeu.setLocation(aLocation);
 							aModel.getYard().setObjectLocation(aAgentFeu, aLocation);
 							aAgentFeu.setStp(aModel.schedule.scheduleRepeating(aAgentFeu));
+							aModel.incNbFire();
 						}
 					}
 				}

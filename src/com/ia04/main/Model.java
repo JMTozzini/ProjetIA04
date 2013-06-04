@@ -19,6 +19,7 @@ public class Model extends SimState {
 	private static final long serialVersionUID = 1L;
 
 	private SparseGrid2D yard;
+	private int nbBurnt=0, nbFire=0, nbDied=0;
 	PropertyChangeSupport pcs= new PropertyChangeSupport(this);
 
 	public Model(long iSeed) {
@@ -295,5 +296,34 @@ public class Model extends SimState {
 	
 	public PropertyChangeSupport getPcs() {
 		return pcs;
+	}
+	
+	public void incNbBurnt(){
+		nbBurnt++;
+	}
+
+	
+	public void incNbFire(){
+		nbFire++;
+	}
+	
+	public void decNbFire(){
+		nbFire--;
+	}
+	
+	public void incNbDied(){
+		nbDied++;
+	}
+	
+	public int getNbBurnt(){
+		return nbBurnt;
+	}
+	
+	public int getNbFire(){
+		return nbFire;
+	}
+	
+	public int getNbDied(){
+		return nbDied;
 	}
 }
