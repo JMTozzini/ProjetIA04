@@ -4,14 +4,12 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
-import com.ia04.agents.AgentEnvironnement;
-import com.ia04.agents.AgentFeu;
-import com.ia04.constantes.ConstantesGenerales;
-
 import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
+import sim.engine.Schedule;
 import sim.engine.SimState;
+import sim.engine.Steppable;
 import sim.portrayal.SimplePortrayal2D;
 import sim.portrayal.grid.DrawPolicy;
 import sim.portrayal.grid.SparseGridPortrayal2D;
@@ -20,46 +18,53 @@ import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.simple.RectanglePortrayal2D;
 import sim.util.Bag;
 
+import com.ia04.agents.AgentEnvironnement;
+import com.ia04.agents.AgentFeu;
+import com.ia04.constantes.ConstantesGenerales;
+
 public class Vue extends GUIState{
 
-	private Display2D display;
-	private JFrame displayFrame;
+	private Display2D display, displayChart;
+	private JFrame displayFrame, chartFrame;
 	private SparseGridPortrayal2D yardPortrayal;
-	
+	private org.jfree.data.xy.XYSeries series;    // les donn�es � afficher sur le chart
+	private sim.util.media.chart.TimeSeriesChartGenerator chart;  // le chart de monitoring
+
 	public Vue(SimState iState) {
 		super(iState);
 		yardPortrayal = new SparseGridPortrayal2D();
 	}
-	
+
 	public static String getName()
 	{
 		return "simulation d'incendie";
 	}
-	
+
 	public void start()
 	{
 		super.start();
 		setupEnvironnement();
+		setupChart();
 	}
-	
+
 	public void setupEnvironnement()
 	{
 		Model aModel = (Model) state;
 		yardPortrayal.setField(aModel.getYard());
 		yardPortrayal.setPortrayalForClass(AgentEnvironnement.class, new FacetedPortrayal2D(
-                new SimplePortrayal2D[]
-                {
-                		new RectanglePortrayal2D(new Color(173, 255, 47), 1, true), // TYPE_VEG_FAIBLE
-                		new RectanglePortrayal2D(new Color(255, 127, 36), 1, true), // TYPE_ROCHE
-                		new OvalPortrayal2D(new Color(34, 139, 34), 1, true), 		// TYPE_VEG_MOY 
-                		new OvalPortrayal2D(new Color(0, 100, 0), 1, true), 		// TYPE_VEG_FORTE
-                		new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
-                		new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
-                		new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
-                		new OvalPortrayal2D(Color.BLACK, 1, true),					// TYPE_BRULE
-                		// Ordre inversement liée à l'importance (plus important en dernier)
-                })
-		);
+				new SimplePortrayal2D[]
+						{
+						new RectanglePortrayal2D(new Color(173, 255, 47), 1, true), // TYPE_VEG_FAIBLE
+						new RectanglePortrayal2D(new Color(255, 127, 36), 1, true), // TYPE_ROCHE
+						new OvalPortrayal2D(new Color(34, 139, 34), 1, true), 		// TYPE_VEG_MOY 
+						new OvalPortrayal2D(new Color(0, 100, 0), 1, true), 		// TYPE_VEG_FORTE
+						new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
+						new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
+						new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
+						new OvalPortrayal2D(Color.BLACK, 1, true),					// TYPE_BRULE
+						// Ordre inversement liée à l'importance (plus important en dernier)
+						})
+				);
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
 		yardPortrayal.setDrawPolicy(new DrawPolicy() { // Afficage de l'agent Feu prioritaire
 			public boolean objectToDraw(Bag iBag, Bag oBag) {
@@ -80,7 +85,43 @@ public class Vue extends GUIState{
 		display.setBackdrop(/*Color.WHITE*/new Color(173, 255, 47));
 		display.repaint();
 	}
-	
+
+	@SuppressWarnings("serial")
+	private void setupChart() {
+		chart.removeAllSeries();
+		series = new org.jfree.data.xy.XYSeries(
+				"FireSeries",
+				false);
+		chart.addSeries(series, null);
+		scheduleRepeatingImmediatelyAfter(new Steppable()
+		{
+			public void step(SimState state)
+			{
+				// at this stage we're adding data to our chart.  We
+				// need an X value and a Y value.  Typically the X
+				// value is the schedule's timestamp.  The Y value
+				// is whatever data you're extracting from your 
+				// simulation.  For purposes of illustration, let's
+				// extract the number of steps from the schedule and
+				// run it through a sin wave.
+
+				double x = state.schedule.getTime();
+				double y = Math.sin(state.schedule.getSteps()) * 10;
+
+				// now add the data
+				if (x >= Schedule.EPOCH && x < Schedule.AFTER_SIMULATION)
+				{
+					series.add(x, y, true);
+
+					// we're in the model thread right now, so we shouldn't directly
+					// update the chart.  Instead we request an update to occur the next
+					// time that control passes back to the Swing event thread.
+					chart.updateChartLater(state.schedule.getSteps());
+				}
+			}
+		});
+	}
+
 	public void init(Controller iController)
 	{
 		super.init(iController);
@@ -91,6 +132,45 @@ public class Vue extends GUIState{
 		iController.registerFrame(displayFrame);
 		displayFrame.setVisible(true);
 		display.attach(yardPortrayal, "yard");
+
+
+
+		displayChart = new Display2D(ConstantesGenerales.FRAME_WIDTH, ConstantesGenerales.FRAME_HEIGHT, this);
+		chart = new sim.util.media.chart.TimeSeriesChartGenerator();
+		chart.setTitle("Title");
+		chart.setXAxisLabel("Series");
+		chart.setYAxisLabel("Time");
+		
+		
+		chartFrame = displayChart.createFrame();
+		chartFrame.setTitle("Monithoring chart");
+		chartFrame.setLocationRelativeTo(null);
+		iController.registerFrame(chartFrame);
+		chartFrame.setVisible(true);
+		chartFrame.pack();
+		displayChart.add(chart);
+		// the console automatically moves itself to the right of all
+		// of its registered frames -- you might wish to rearrange the
+		// location of all the windows, including the console, at this
+		// point in time....
+	}
+
+	public void finish(){
+
+		super.finish();
+
+		chart.update(state.schedule.getSteps(), true);
+		chart.repaint();
+		chart.stopMovie();
+	}
+
+	public void quit()
+	{
+		super.quit();
+		chart.update(state.schedule.getSteps(), true);
+		chart.repaint();
+		chart.stopMovie();
+		if (chartFrame != null)	chartFrame.dispose();
+		chartFrame = null;
 	}
 }
-	
