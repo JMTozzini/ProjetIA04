@@ -1,18 +1,20 @@
 package com.ia04.main;
 
 import java.beans.PropertyChangeSupport;
-
-import com.ia04.agents.AgentEnvironnement;
-import com.ia04.agents.AgentFeu;
-import com.ia04.constantes.ConstantesAgents;
-import com.ia04.constantes.ConstantesEnv;
-import com.ia04.constantes.ConstantesGenerales;
+import java.util.Iterator;
 
 import sim.engine.SimState;
 import sim.engine.Stoppable;
 import sim.field.grid.SparseGrid2D;
 import sim.util.Bag;
 import sim.util.Int2D;
+
+import com.ia04.agents.AgentCamion;
+import com.ia04.agents.AgentEnvironnement;
+import com.ia04.agents.AgentFeu;
+import com.ia04.constantes.ConstantesAgents;
+import com.ia04.constantes.ConstantesEnv;
+import com.ia04.constantes.ConstantesGenerales;
 
 public class Model extends SimState {
 
@@ -285,8 +287,84 @@ public class Model extends SimState {
 	}
 	
 	private void setPompier(){
-		// setCamion();
-		// setCanadair();
+		// setPieton(); // fait par l'IA des camions
+		setCamion();
+		setCanadair();
+	}
+	
+	private void setCamion(){
+		// Les camions viennent tous de la même caserne
+		
+		// L'emplacement de la caserne est déterminé au hasard parmi les habitations au bord d'une route
+		// Int2D aLocation = null;
+		Bag aAgents = yard.getAllObjects();
+		Iterator it = aAgents.iterator();
+		Object object = null;
+		Bag aCaserne = new Bag();
+		while(it.hasNext()){
+			object = it.next();
+			if (object instanceof AgentEnvironnement){
+				AgentEnvironnement envAgent = (AgentEnvironnement)object;
+				if (envAgent.getType() == ConstantesAgents.TYPE_HABITATION &&
+				    getNeighborsByType(envAgent.getLocation(), 1, ConstantesAgents.TYPE_ROUTE).numObjs > 0){
+					aCaserne.add(envAgent);
+				}
+			}
+		}
+		
+		if(aCaserne.numObjs != 0){
+			AgentEnvironnement caserne = (AgentEnvironnement)aCaserne.get(random.nextInt(aCaserne.numObjs));
+			// TODO caserne portrayal
+			
+			// Placement des camions
+			int distance = 0;
+			Bag routesCaserne;
+			do {
+				distance++;
+				routesCaserne = getNeighborsByType(caserne.getLocation(), distance, ConstantesAgents.TYPE_ROUTE);
+			} while(ConstantesAgents.NB_CAMION > routesCaserne.numObjs);
+
+			AgentEnvironnement route = null;
+			int nbCamion = ConstantesAgents.NB_CAMION;
+			Iterator itRoutesCaserne = routesCaserne.iterator();
+			while(nbCamion > 0 && itRoutesCaserne.hasNext()){
+				route = (AgentEnvironnement)itRoutesCaserne.next();
+				AgentCamion aAgentCamion = new AgentCamion(ConstantesAgents.RES_CAMION, ConstantesAgents.DEP_CAMION,  ConstantesAgents.FORCE_CAMION);
+				yard.setObjectLocation(aAgentCamion, route.getLocation());
+				aAgentCamion.setLocation(route.getLocation());
+				nbCamion--;
+			}
+		}
+	}
+	
+	private Bag getNeighborsByType(Int2D location, int dist, int type){
+		Bag aVoisins = null;
+		aVoisins = yard.getNeighborsMaxDistance(
+				location.getX(),
+				location.getY(),
+				dist,
+				true,
+				aVoisins,
+				null,
+				null
+			);
+		Iterator itVoisin = aVoisins.iterator();
+		Object object;
+		Bag aVoisinsType = new Bag();
+		while(itVoisin.hasNext()){
+			object = itVoisin.next();
+			if (object instanceof AgentEnvironnement){
+				AgentEnvironnement voisinAgent = (AgentEnvironnement)object;
+				if (voisinAgent.getType() == type){
+					aVoisinsType.add(voisinAgent);
+				}
+			}
+		}
+		return aVoisinsType;
+	}
+	
+	private void setCanadair(){
+		// TODO
 	}
 
 	public SparseGrid2D getYard() {

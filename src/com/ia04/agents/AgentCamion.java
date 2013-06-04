@@ -21,7 +21,7 @@ public class AgentCamion extends AgentPompier {
 	}
 	
 	private void deplacement() {
-		
+		// Les camions peuvent se doubler mais pas s'arrêter sur la même case
 	}
 	
 	private void setPieton() {

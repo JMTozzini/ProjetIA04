@@ -18,6 +18,8 @@ import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.simple.RectanglePortrayal2D;
 import sim.util.Bag;
 
+
+import com.ia04.agents.AgentCamion;
 import com.ia04.agents.AgentEnvironnement;
 import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesGenerales;
@@ -67,6 +69,7 @@ public class Vue extends GUIState{
 						})
 				);
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
+		yardPortrayal.setPortrayalForClass(AgentCamion.class, new OvalPortrayal2D(Color.MAGENTA, 1, true));
 		yardPortrayal.setDrawPolicy(new DrawPolicy() { // Afficage de l'agent Feu prioritaire
 			public boolean objectToDraw(Bag iBag, Bag oBag) {
 				for(Object aAgent : iBag)
@@ -76,7 +79,12 @@ public class Vue extends GUIState{
 				}
 				for(Object aAgent : iBag)
 				{
-					if(!(aAgent instanceof AgentFeu))
+					if(aAgent instanceof AgentCamion)
+						oBag.add(aAgent);
+				}
+				for(Object aAgent : iBag)
+				{
+					if(!(aAgent instanceof AgentFeu) && !(aAgent instanceof AgentCamion))
 						oBag.add(aAgent);
 				}
 				return false;
