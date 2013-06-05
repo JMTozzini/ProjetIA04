@@ -37,7 +37,7 @@ public class AgentFeu implements Steppable {
 		Bag aAgents = aModel.getYard().getNeighborsMaxDistance(x, y, 1, false, null, null, null);
 		for(Object i: aAgents)
 		{		
-			if(!(i instanceof AgentFeu)) // Pas un agentFeu
+			if(i instanceof AgentEnvironnement) // Pas un agentFeu
 			{
 				AgentEnvironnement aAgentEnv = (AgentEnvironnement)i;
 				if(aAgentEnv.isInflammable())
