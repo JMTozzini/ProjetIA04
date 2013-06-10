@@ -7,8 +7,8 @@ import sim.engine.SimState;
 @SuppressWarnings("serial")
 public class AgentCamion extends AgentPompier {
 
-	public AgentCamion(int iResistance, int iDeplacement,int iForce) {
-		super(iResistance, iDeplacement,iForce);
+	public AgentCamion(int iResistance, int iDeplacement,int iForce, int iPerception) {
+		super(iResistance, iDeplacement,iForce, iPerception);
 	}
 	
 	@Override
