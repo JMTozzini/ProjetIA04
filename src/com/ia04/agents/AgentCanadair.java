@@ -7,8 +7,8 @@ import sim.engine.SimState;
 @SuppressWarnings("serial")
 public class AgentCanadair extends AgentPompier {
 	
-	public AgentCanadair(int iResistance, int iDeplacement,int iForce) {
-		super(iResistance, iDeplacement,iForce);
+	public AgentCanadair(int iResistance, int iDeplacement,int iForce, int iPerception) {
+		super(iResistance, iDeplacement,iForce, iPerception);
 	}
 	
 	@Override

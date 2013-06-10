@@ -52,4 +52,10 @@ public class ConstantesAgents {
 	public static int FORCE_CAMION   = 5;
 	public static int FORCE_CANADAIR = 10;
 	
+	// Perception Pompiers
+	public static int PERCEPTION_PIETON   = 10;
+	public static int PERCEPTION_CAMION   = 50;
+	public static int PERCEPTION_CANADAIR = 100;
+	
+	
 }

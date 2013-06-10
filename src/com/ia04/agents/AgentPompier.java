@@ -9,21 +9,23 @@ import sim.util.Int2D;
 public abstract class AgentPompier implements Steppable {
 
 	// Position
-	private int x=-1;
-	private int y=-1;
+	protected int x=-1;
+	protected int y=-1;
 	
 	// Attributs
-	private int resistance;
-	private int deplacement;
-	private int force;
-	
+	protected int resistance;
+	protected int deplacement;
+	protected int force;
+	protected int perception;
+
 	// Autres
-	private Stoppable stp;
+	protected Stoppable stp;
 	
-	public AgentPompier(int iResistance, int iDeplacement, int iForce){
+	public AgentPompier(int iResistance, int iDeplacement, int iForce, int iPerception){
 		resistance = iResistance;
 		deplacement = iDeplacement;
 		force = iForce;
+		perception = iPerception;
 	}
 	
 	public void step(SimState iModel){
@@ -95,5 +97,12 @@ public abstract class AgentPompier implements Steppable {
 	@Override
 	public String toString() {
 		return "Agent Pompier [x=" + x + ", y=" + y + "]";
+	}
+	public int getPerception() {
+		return perception;
+	}
+
+	public void setPerception(int perception) {
+		this.perception = perception;
 	}
 }
