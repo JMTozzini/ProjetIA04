@@ -1,5 +1,6 @@
 package com.ia04.agents;
 
+import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesEnv;
 import com.ia04.main.Model;
 
@@ -37,7 +38,7 @@ public class AgentFeu implements Steppable {
 		Bag aAgents = aModel.getYard().getNeighborsMaxDistance(x, y, 1, false, null, null, null);
 		for(Object i: aAgents)
 		{		
-			if(i instanceof AgentEnvironnement) // Pas un agentFeu
+			if(i instanceof AgentEnvironnement)
 			{
 				AgentEnvironnement aAgentEnv = (AgentEnvironnement)i;
 				if(aAgentEnv.isInflammable())
@@ -61,7 +62,7 @@ public class AgentFeu implements Steppable {
 						Int2D aLocation = new Int2D(aAgentEnv.getX(), aAgentEnv.getY());
 						if(aAgentEnv.getResExterne()==0 && aModel.getYard().numObjectsAtLocation(aLocation)==1) // Expansion du Feu
 						{
-							AgentFeu aAgentFeu = new AgentFeu(ConstantesEnv.FEU_FORCE, ConstantesEnv.FEU_RES);
+							AgentFeu aAgentFeu = new AgentFeu(ConstantesAgents.FEU_FORCE, ConstantesAgents.FEU_RES);
 							aAgentFeu.setLocation(aLocation);
 							aModel.getYard().setObjectLocation(aAgentFeu, aLocation);
 							aAgentFeu.setStp(aModel.schedule.scheduleRepeating(aAgentFeu));

@@ -1,8 +1,11 @@
 package com.ia04.agents;
 
+import com.ia04.main.Model;
+
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.engine.Stoppable;
+import sim.util.Bag;
 import sim.util.Int2D;
 
 @SuppressWarnings("serial")
@@ -33,6 +36,83 @@ public abstract class AgentPompier implements Steppable {
 		// TODO
 	}
 	
+	protected boolean RapprochementFeu(AgentFeu iAgentFeu, Model iModel, Integer iDist)
+	{
+		// induire un random 
+		if(iDist<this.getDeplacement()) // téléportation
+		{
+			iModel.getYard().setObjectLocation(this, iAgentFeu.getX(), iAgentFeu.getY());
+			this.setX(iAgentFeu.getX());
+			this.setY(iAgentFeu.getY());
+			return true;
+		}
+		else
+		{
+			Integer aDeplacementRestant = this.getDeplacement();
+			Integer aDeltaX = this.getX() - iAgentFeu.getX();
+			Integer aDeltaY = this.getY() - iAgentFeu.getY();
+			
+			int aX = this.getX();
+			int aY = this.getY();
+			
+			while(aDeplacementRestant > 0)
+			{
+				if(aDeltaX>0)
+				{
+					aDeltaX--;
+					this.setX(this.getX()-1);
+					aDeplacementRestant--;
+				}
+				else if(aDeltaX<0)
+				{
+					aDeltaX++;
+					this.setX(this.getX()+1);
+					aDeplacementRestant--;
+				}
+				else if(aDeltaY>0)
+				{
+					aDeltaY--;
+					this.setY(this.getY()-1);
+					aDeplacementRestant--;
+				}
+				else if(aDeltaY<0)
+				{
+					aDeltaY++;
+					this.setY(this.getY()+1);
+					aDeplacementRestant--;
+				}
+			}
+			iModel.getYard().setObjectLocation(this, this.getX(), this.getY());
+			
+			Bag aAgents = iModel.getYard().getObjectsAtLocation(aX, aY);
+			if(aAgents!=null)
+			{
+				iModel.getYard().removeObjectsAtLocation(aX, aY);
+				for(Object i:aAgents)
+				{
+					if(!(i instanceof AgentCanadair))
+					{
+						if(i instanceof AgentPompier)
+						{
+							AgentPompier aAgent = (AgentPompier) i;
+							iModel.getYard().setObjectLocation(i, aAgent.getLocation());
+						}
+						else if(i instanceof AgentEnvironnement)
+						{
+							AgentEnvironnement aAgent = (AgentEnvironnement) i;
+							iModel.getYard().setObjectLocation(i, aAgent.getLocation());
+						}
+						else if(i instanceof AgentFeu)
+						{
+							AgentFeu aAgent = (AgentFeu) i;
+							iModel.getYard().setObjectLocation(i, aAgent.getLocation());	
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 	public int getResistance() {
 		return resistance;

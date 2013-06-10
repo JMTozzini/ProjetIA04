@@ -8,7 +8,4 @@ public class ConstantesEnv {
 	public static double PROP_ROCHE			= 0.05;
 	public static double PROP_EAU			= 0.02;
 	public static double PROP_ROUTE			= 0.07;
-	
-	public static int FEU_FORCE	= 1;
-	public static int FEU_RES	= 10;
 }

@@ -10,11 +10,13 @@ import sim.util.Bag;
 import sim.util.Int2D;
 
 import com.ia04.agents.AgentCamion;
+import com.ia04.agents.AgentCanadair;
 import com.ia04.agents.AgentEnvironnement;
 import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesEnv;
 import com.ia04.constantes.ConstantesGenerales;
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class Model extends SimState {
 
@@ -270,7 +272,7 @@ public class Model extends SimState {
 	private void setFeu()
 	{
 		boolean aValide = false;
-		AgentFeu aAgentFeu = new AgentFeu(ConstantesEnv.FEU_FORCE, ConstantesEnv.FEU_RES);
+		AgentFeu aAgentFeu = new AgentFeu(ConstantesAgents.FEU_FORCE, ConstantesAgents.FEU_RES);
 		do
 		{
 			Int2D aLocation = new Int2D(random.nextInt(yard.getWidth()), random.nextInt(yard.getWidth()));
@@ -293,9 +295,9 @@ public class Model extends SimState {
 	}
 	
 	private void setCamion(){
-		// Les camions viennent tous de la même caserne
+		// Les camions viennent tous de la mï¿½me caserne
 		
-		// L'emplacement de la caserne est déterminé au hasard parmi les habitations au bord d'une route
+		// L'emplacement de la caserne est dï¿½terminï¿½ au hasard parmi les habitations au bord d'une route
 		// Int2D aLocation = null;
 		Bag aAgents = yard.getAllObjects();
 		Iterator it = aAgents.iterator();
@@ -364,7 +366,16 @@ public class Model extends SimState {
 	}
 	
 	private void setCanadair(){
-		// TODO
+		for (int i = 0; i < ConstantesAgents.NB_CANDAIR; i++)
+		{
+			AgentCanadair aAgentCan = new AgentCanadair(
+					ConstantesAgents.RES_CANADAIR, 
+					ConstantesAgents.DEP_CANADAIR, 
+					ConstantesAgents.FORCE_CANADAIR);
+			Int2D aLocation = new Int2D(-1, random.nextInt(yard.getHeight()));
+			yard.setObjectLocation(aAgentCan, aLocation);
+			aAgentCan.setStp(schedule.scheduleRepeating(aAgentCan));
+		}
 	}
 
 	public SparseGrid2D getYard() {
