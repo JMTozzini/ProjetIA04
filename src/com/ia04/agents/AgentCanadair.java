@@ -13,13 +13,8 @@ public class AgentCanadair extends AgentPompier {
 
 	boolean feuAtteint=false;	
 	
-<<<<<<< HEAD
-	public AgentCanadair(int iResistance, int iDeplacement,int iForce) {
-		super(iResistance, iDeplacement, iForce);
-=======
 	public AgentCanadair(int iResistance, int iDeplacement,int iForce, int iPerception) {
 		super(iResistance, iDeplacement,iForce, iPerception);
->>>>>>> 40d0a89a6d980394545adf192301dc2e16af0cfb
 	}
 	
 	@Override

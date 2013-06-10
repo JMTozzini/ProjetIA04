@@ -331,7 +331,7 @@ public class Model extends SimState {
 			Iterator itRoutesCaserne = routesCaserne.iterator();
 			while(nbCamion > 0 && itRoutesCaserne.hasNext()){
 				route = (AgentEnvironnement)itRoutesCaserne.next();
-				AgentCamion aAgentCamion = new AgentCamion(ConstantesAgents.RES_CAMION, ConstantesAgents.DEP_CAMION,  ConstantesAgents.FORCE_CAMION);
+				AgentCamion aAgentCamion = new AgentCamion(ConstantesAgents.RES_CAMION, ConstantesAgents.DEP_CAMION,  ConstantesAgents.FORCE_CAMION, ConstantesAgents.PERCEPTION_CANADAIR);
 				yard.setObjectLocation(aAgentCamion, route.getLocation());
 				aAgentCamion.setLocation(route.getLocation());
 				nbCamion--;
@@ -371,7 +371,8 @@ public class Model extends SimState {
 			AgentCanadair aAgentCan = new AgentCanadair(
 					ConstantesAgents.RES_CANADAIR, 
 					ConstantesAgents.DEP_CANADAIR, 
-					ConstantesAgents.FORCE_CANADAIR);
+					ConstantesAgents.FORCE_CANADAIR,
+					ConstantesAgents.PERCEPTION_CANADAIR);
 			Int2D aLocation = new Int2D(-1, random.nextInt(yard.getHeight()));
 			yard.setObjectLocation(aAgentCan, aLocation);
 			aAgentCan.setStp(schedule.scheduleRepeating(aAgentCan));

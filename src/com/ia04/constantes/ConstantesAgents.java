@@ -52,19 +52,15 @@ public class ConstantesAgents {
 	public static int FORCE_CAMION   = 5;
 	public static int FORCE_CANADAIR = 10;
 	
-<<<<<<< HEAD
 	// Autres attributs
 	public static int INTERVAL_ACTION = 50;
 	
 	// Caracteristiques Feu
 	public static int FEU_FORCE	= 1;
 	public static int FEU_RES	= 10;
-=======
 	// Perception Pompiers
 	public static int PERCEPTION_PIETON   = 10;
 	public static int PERCEPTION_CAMION   = 50;
 	public static int PERCEPTION_CANADAIR = 100;
 	
-	
->>>>>>> 40d0a89a6d980394545adf192301dc2e16af0cfb
 }
