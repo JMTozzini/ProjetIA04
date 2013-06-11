@@ -347,13 +347,13 @@ public class Model extends SimState {
 		}
 	}
 
-	private Bag getNeighborsByType(Int2D location, int dist, int type){
+	public Bag getNeighborsByType(Int2D location, int dist, int type){
 		Bag aVoisins = null;
 		aVoisins = yard.getNeighborsMaxDistance(
 				location.getX(),
 				location.getY(),
 				dist,
-				true,
+				false,
 				aVoisins,
 				null,
 				null

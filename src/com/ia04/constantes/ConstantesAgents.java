@@ -12,7 +12,6 @@ public class ConstantesAgents {
 	public static int TYPE_ROUTE		= 7;
 	public static int TYPE_BRULE		= 8;
 	// !!! L'ordre de ces attribut influence l'ordre du FacetedPortrayal2D dans la vue !!!
-	
 
 	// Resistances externe liées au type
 	public static int RES_EXT_VEG_FAIBLE	= 10;
@@ -54,10 +53,12 @@ public class ConstantesAgents {
 	
 	// Autres attributs
 	public static int INTERVAL_ACTION = 50;
+	public static int NEW_OBJECTIF_MIN_DISTANCE = 3;
 	
 	// Caracteristiques Feu
 	public static int FEU_FORCE	= 1;
 	public static int FEU_RES	= 10;
+	
 	// Perception Pompiers
 	public static int PERCEPTION_PIETON   = 10;
 	public static int PERCEPTION_CAMION   = 50;
