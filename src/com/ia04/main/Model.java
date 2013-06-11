@@ -36,8 +36,15 @@ public class Model extends SimState {
 	{
 		super.start();
 		yard.clear();
+		setMonithoringCst();
 		setEnvironnement();
 		setAgents();
+	}
+
+	private void setMonithoringCst() {
+		nbBurnt=0;
+		nbFire=0; 
+		nbDied=0;
 	}
 
 	private void setEnvironnement() // Set les agents environnement uniquement
@@ -66,7 +73,7 @@ public class Model extends SimState {
 			}
 		}
 	}
-	
+
 	private void setEau()
 	{
 		int aNbEau = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_EAU);
@@ -108,7 +115,7 @@ public class Model extends SimState {
 			aAgentRoche.setLocation(aLocation);
 		}
 	}
-	
+
 	private void setVegetationMoyenne()
 	{
 		int aNbVegMoy = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_MOY);
@@ -121,7 +128,7 @@ public class Model extends SimState {
 			aAgentVegMoy.setLocation(aLocation);
 		}
 	}
-	
+
 	private void setVegetationForte()
 	{
 		int aNbVegForte = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_VEG_FORTE);
@@ -134,7 +141,7 @@ public class Model extends SimState {
 			aAgentVegForte.setLocation(aLocation);
 		}
 	}
-	
+
 	private void setRoute()
 	{
 		int aNbRoute = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_ROUTE);
@@ -164,7 +171,7 @@ public class Model extends SimState {
 			}
 		}
 	}
-	
+
 	private void setHabitation()
 	{
 		int aNbHab = (int) Math.round(Math.pow(ConstantesGenerales.GRID_SIZE,2)*ConstantesEnv.PROP_HABITATION);
@@ -177,7 +184,7 @@ public class Model extends SimState {
 			aAgentHab.setLocation(aLocation);
 		}
 	}
-	
+
 	private void nettoyageEnvironnement()
 	{
 		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
@@ -201,7 +208,7 @@ public class Model extends SimState {
 			}
 		}
 	}
-	
+
 	private void ajoutSchedule()
 	{
 		for(int i=0; i<ConstantesGenerales.GRID_SIZE;i++)
@@ -219,7 +226,7 @@ public class Model extends SimState {
 			}
 		}
 	}
-	
+
 	private Int2D getNewDirection(AgentEnvironnement iPrevAgent, AgentEnvironnement iCurAgent, int iNewSens)
 	{
 		Int2D oLocation = null;
@@ -268,7 +275,7 @@ public class Model extends SimState {
 		setFeu();
 		setPompier();
 	}
-	
+
 	private void setFeu()
 	{
 		boolean aValide = false;
@@ -287,16 +294,16 @@ public class Model extends SimState {
 		}while(!aValide);
 		aAgentFeu.setStp(schedule.scheduleRepeating(aAgentFeu));
 	}
-	
+
 	private void setPompier(){
 		// setPieton(); // fait par l'IA des camions
 		setCamion();
 		setCanadair();
 	}
-	
+
 	private void setCamion(){
 		// Les camions viennent tous de la m�me caserne
-		
+
 		// L'emplacement de la caserne est d�termin� au hasard parmi les habitations au bord d'une route
 		// Int2D aLocation = null;
 		Bag aAgents = yard.getAllObjects();
@@ -308,16 +315,16 @@ public class Model extends SimState {
 			if (object instanceof AgentEnvironnement){
 				AgentEnvironnement envAgent = (AgentEnvironnement)object;
 				if (envAgent.getType() == ConstantesAgents.TYPE_HABITATION &&
-				    getNeighborsByType(envAgent.getLocation(), 1, ConstantesAgents.TYPE_ROUTE).numObjs > 0){
+						getNeighborsByType(envAgent.getLocation(), 1, ConstantesAgents.TYPE_ROUTE).numObjs > 0){
 					aCaserne.add(envAgent);
 				}
 			}
 		}
-		
+
 		if(aCaserne.numObjs != 0){
 			AgentEnvironnement caserne = (AgentEnvironnement)aCaserne.get(random.nextInt(aCaserne.numObjs));
 			// TODO caserne portrayal
-			
+
 			// Placement des camions
 			int distance = 0;
 			Bag routesCaserne;
@@ -334,11 +341,12 @@ public class Model extends SimState {
 				AgentCamion aAgentCamion = new AgentCamion(ConstantesAgents.RES_CAMION, ConstantesAgents.DEP_CAMION,  ConstantesAgents.FORCE_CAMION, ConstantesAgents.PERCEPTION_CANADAIR);
 				yard.setObjectLocation(aAgentCamion, route.getLocation());
 				aAgentCamion.setLocation(route.getLocation());
+				aAgentCamion.setStp(schedule.scheduleRepeating(aAgentCamion));
 				nbCamion--;
 			}
 		}
 	}
-	
+
 	private Bag getNeighborsByType(Int2D location, int dist, int type){
 		Bag aVoisins = null;
 		aVoisins = yard.getNeighborsMaxDistance(
@@ -349,7 +357,7 @@ public class Model extends SimState {
 				aVoisins,
 				null,
 				null
-			);
+				);
 		Iterator itVoisin = aVoisins.iterator();
 		Object object;
 		Bag aVoisinsType = new Bag();
@@ -364,7 +372,7 @@ public class Model extends SimState {
 		}
 		return aVoisinsType;
 	}
-	
+
 	private void setCanadair(){
 		for (int i = 0; i < ConstantesAgents.NB_CANDAIR; i++)
 		{
@@ -383,36 +391,36 @@ public class Model extends SimState {
 		return yard;
 	}
 
-	
+
 	public PropertyChangeSupport getPcs() {
 		return pcs;
 	}
-	
+
 	public void incNbBurnt(){
 		nbBurnt++;
 	}
 
-	
+
 	public void incNbFire(){
 		nbFire++;
 	}
-	
+
 	public void decNbFire(){
 		nbFire--;
 	}
-	
+
 	public void incNbDied(){
 		nbDied++;
 	}
-	
+
 	public int getNbBurnt(){
 		return nbBurnt;
 	}
-	
+
 	public int getNbFire(){
 		return nbFire;
 	}
-	
+
 	public int getNbDied(){
 		return nbDied;
 	}

@@ -23,6 +23,7 @@ import com.ia04.agents.AgentCamion;
 import com.ia04.agents.AgentCanadair;
 import com.ia04.agents.AgentEnvironnement;
 import com.ia04.agents.AgentFeu;
+import com.ia04.agents.AgentPieton;
 import com.ia04.agents.AgentPompier;
 import com.ia04.constantes.ConstantesGenerales;
 
@@ -73,6 +74,7 @@ public class Vue extends GUIState{
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
 		yardPortrayal.setPortrayalForClass(AgentCamion.class, new OvalPortrayal2D(Color.MAGENTA, 1, true));
 		yardPortrayal.setPortrayalForClass(AgentCanadair.class, new OvalPortrayal2D(Color.YELLOW, 1, true));
+		yardPortrayal.setPortrayalForClass(AgentPieton.class, new OvalPortrayal2D(Color.WHITE, 1, true));
 		yardPortrayal.setDrawPolicy(new DrawPolicy() { // Afficage de l'agent Feu prioritaire
 			public boolean objectToDraw(Bag iBag, Bag oBag) {
 				for(Object aAgent : iBag)
@@ -83,6 +85,11 @@ public class Vue extends GUIState{
 				for(Object aAgent : iBag)
 				{
 					if(aAgent instanceof AgentCamion)
+						oBag.add(aAgent);
+				}
+				for(Object aAgent : iBag)
+				{
+					if(aAgent instanceof AgentPieton)
 						oBag.add(aAgent);
 				}
 				for(Object aAgent : iBag)
@@ -152,7 +159,7 @@ public class Vue extends GUIState{
 
 
 
-		displayChart = new Display2D(ConstantesGenerales.CHART_FRAME_WIDTH, ConstantesGenerales.FRAME_HEIGHT, this);
+		displayChart = new Display2D(ConstantesGenerales.CHART_FRAME_WIDTH, ConstantesGenerales.CHART_FRAME_HEIGHT, this);
 		chart = new sim.util.media.chart.TimeSeriesChartGenerator();
 		chart.setTitle("Title");
 		chart.setXAxisLabel("Time");
