@@ -116,6 +116,36 @@ public abstract class AgentPompier implements Steppable {
 		return false;
 	}
 
+	protected AgentFeu checkAgentFeu(Bag iAgents)
+	{
+		for(Object i : iAgents)
+		{
+			if(i instanceof AgentFeu)
+				return (AgentFeu)i;
+		}
+		return null;
+	}
+	
+	protected Bag getFeuNeighbors(Model iModel, int distance){
+		Bag aVoisins = null;
+		aVoisins = iModel.getYard().getNeighborsMaxDistance(
+				getX(),
+				getY(),
+				distance,
+				false,
+				aVoisins,
+				null,
+				null
+			);
+		Bag aBagFeu = new Bag();
+		for (Object aVoisin : aVoisins){
+			if(aVoisin instanceof AgentFeu){
+				aBagFeu.add((AgentFeu)aVoisin);
+			}
+		}
+		return aBagFeu;
+	}
+
 	public int getResistance() {
 		return resistance;
 	}

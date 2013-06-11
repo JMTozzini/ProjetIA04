@@ -44,17 +44,6 @@ public class AgentCanadair extends AgentPompier {
 		}
 	}
 
-	
-	private AgentFeu checkAgentFeu(Bag iAgents)
-	{
-		for(Object i : iAgents)
-		{
-			if(i instanceof AgentFeu)
-				return (AgentFeu)i;
-		}
-		return null;
-	}
-
 	private void eteindreFeu(Model iModel){
 		Bag aAgents = iModel.getYard().getNeighborsAndCorrespondingPositionsMaxDistance(getX(), getY(), 2, false, null, null, null);
 		if(aAgents != null)

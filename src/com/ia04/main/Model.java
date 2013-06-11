@@ -334,18 +334,19 @@ public class Model extends SimState {
 				AgentCamion aAgentCamion = new AgentCamion(ConstantesAgents.RES_CAMION, ConstantesAgents.DEP_CAMION,  ConstantesAgents.FORCE_CAMION, ConstantesAgents.PERCEPTION_CANADAIR);
 				yard.setObjectLocation(aAgentCamion, route.getLocation());
 				aAgentCamion.setLocation(route.getLocation());
+				aAgentCamion.setStp(schedule.scheduleRepeating(aAgentCamion));
 				nbCamion--;
 			}
 		}
 	}
 	
-	private Bag getNeighborsByType(Int2D location, int dist, int type){
+	public Bag getNeighborsByType(Int2D location, int dist, int type){
 		Bag aVoisins = null;
 		aVoisins = yard.getNeighborsMaxDistance(
 				location.getX(),
 				location.getY(),
 				dist,
-				true,
+				false,
 				aVoisins,
 				null,
 				null
