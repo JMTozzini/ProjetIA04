@@ -57,7 +57,7 @@ public class ConstantesAgents {
 	
 	// Caracteristiques Feu
 	public static int FEU_FORCE	= 1;
-	public static int FEU_RES	= 10;
+	public static int FEU_RES	= 6;
 	
 	// Perception Pompiers
 	public static int PERCEPTION_PIETON   = 10;

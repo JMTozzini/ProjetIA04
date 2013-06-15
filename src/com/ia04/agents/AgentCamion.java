@@ -109,7 +109,7 @@ public class AgentCamion extends AgentPompier {
 	private boolean deplacement() {
 		// Les camions peuvent se doubler mais pas s'arrêter sur la même case
 		Bag aRoutesDeplacement = new Bag();
-		if (aRoutes.numObjs > 0 && !getLocation().equals(aObjectif.getLocation())){
+		if (aRoutes.numObjs > 0 && aObjectif!= null && !getLocation().equals(aObjectif.getLocation())){
 			// cherche les routes accessibles qui sont à une distance de getDeplacement() au maximum
 			aRoutesDeplacement = aModel.getNeighborsByType(getLocation(), getDeplacement(), ConstantesAgents.TYPE_ROUTE);
 			
@@ -167,6 +167,7 @@ public class AgentCamion extends AgentPompier {
 			model.incNbFiremen();
 			aModel.getYard().setObjectLocation(pieton, aCase.getLocation());
 			pieton.setLocation(aCase.getLocation());
+			pieton.setStp(aModel.schedule.scheduleRepeating(pieton));
 			nbPietonsRestant--;
 		}		
 

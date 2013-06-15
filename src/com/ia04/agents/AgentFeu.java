@@ -35,6 +35,11 @@ public class AgentFeu implements Steppable {
 
 	public void step(SimState iState) {
 		Model aModel = (Model) iState;
+		if(resistance <= 0){
+			aModel.decNbFire();
+			this.getStp().stop();
+			aModel.getYard().remove(this);
+		}
 		Bag aAgents = aModel.getYard().getNeighborsMaxDistance(x, y, 1, false, null, null, null);
 		for(Object i: aAgents)
 		{		
@@ -92,6 +97,10 @@ public class AgentFeu implements Steppable {
 
 	public void setResistance(int resistance) {
 		this.resistance = resistance;
+	}
+	
+	public void reduceRes(int force) {
+		this.setResistance(this.getResistance()-force);
 	}
 
 
