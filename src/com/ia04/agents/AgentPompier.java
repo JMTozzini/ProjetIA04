@@ -31,6 +31,10 @@ public abstract class AgentPompier implements Steppable {
 		perception = iPerception;
 	}
 	
+	public boolean vivant(){
+		return resistance>0;
+	}
+	
 	public void step(SimState iModel){
 	}
 	
