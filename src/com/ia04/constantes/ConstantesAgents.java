@@ -64,4 +64,8 @@ public class ConstantesAgents {
 	public static int PERCEPTION_CAMION   = 50;
 	public static int PERCEPTION_CANADAIR = 100;
 	
+	// Distance d'extinction du feu
+	public static int DIST_EXTINCTION_CAMION   = 1;
+	public static int DIST_EXTINCTION_CANADAIR = 1;
+	
 }

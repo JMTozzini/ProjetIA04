@@ -302,6 +302,47 @@ public class Model extends SimState {
 	}
 
 	private void setCamion(){
+		// les camions sont placé à partir d'une route prise au hasard
+		Bag aAllAgents = yard.getAllObjects();
+		// élimination des agents autres que routes
+		Bag aRoutes = new Bag();
+		Iterator itAllAgents = aAllAgents.iterator();
+		Object object;
+		while(itAllAgents.hasNext()){
+			object = itAllAgents.next();
+			if (object instanceof AgentEnvironnement){
+				if (((AgentEnvironnement)object).getType() == ConstantesAgents.TYPE_ROUTE){
+					aRoutes.add(object);
+				}
+			}
+		}
+		
+		if(aRoutes.numObjs != 0){
+			AgentEnvironnement caserne = (AgentEnvironnement)aRoutes.get(random.nextInt(aRoutes.numObjs));
+
+			// Placement des camions
+			int distance = 0;
+			Bag routesCaserne;
+			do {
+				distance++;
+				routesCaserne = getNeighborsByType(caserne.getLocation(), distance, ConstantesAgents.TYPE_ROUTE);
+			} while(ConstantesAgents.NB_CAMION > routesCaserne.numObjs);
+
+			AgentEnvironnement route = null;
+			int nbCamion = ConstantesAgents.NB_CAMION;
+			Iterator itRoutesCaserne = routesCaserne.iterator();
+			while(nbCamion > 0 && itRoutesCaserne.hasNext()){
+				route = (AgentEnvironnement)itRoutesCaserne.next();
+				AgentCamion aAgentCamion = new AgentCamion(ConstantesAgents.RES_CAMION, ConstantesAgents.DEP_CAMION,  ConstantesAgents.FORCE_CAMION, ConstantesAgents.PERCEPTION_CANADAIR);
+				yard.setObjectLocation(aAgentCamion, route.getLocation());
+				aAgentCamion.setLocation(route.getLocation());
+				aAgentCamion.setStp(schedule.scheduleRepeating(aAgentCamion));
+				nbCamion--;
+			}
+		}
+	}
+	
+	private void setCamionAvecCaserne(){
 		// Les camions viennent tous de la mï¿½me caserne
 
 		// L'emplacement de la caserne est dï¿½terminï¿½ au hasard parmi les habitations au bord d'une route
@@ -344,6 +385,8 @@ public class Model extends SimState {
 				aAgentCamion.setStp(schedule.scheduleRepeating(aAgentCamion));
 				nbCamion--;
 			}
+		} else {
+			setCamion();
 		}
 	}
 
