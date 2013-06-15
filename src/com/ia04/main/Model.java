@@ -23,7 +23,7 @@ public class Model extends SimState {
 	private static final long serialVersionUID = 1L;
 
 	private SparseGrid2D yard;
-	private int nbBurnt=0, nbFire=0, nbDied=0;
+	private int nbBurnt=0, nbFire=0, nbDied=0, nbFiremen=0;
 	PropertyChangeSupport pcs= new PropertyChangeSupport(this);
 
 	public Model(long iSeed) {
@@ -45,6 +45,7 @@ public class Model extends SimState {
 		nbBurnt=0;
 		nbFire=0; 
 		nbDied=0;
+		nbFiremen=0;
 	}
 
 	private void setEnvironnement() // Set les agents environnement uniquement
@@ -451,9 +452,13 @@ public class Model extends SimState {
 	public void decNbFire(){
 		nbFire--;
 	}
-
+	
 	public void incNbDied(){
 		nbDied++;
+	}
+
+	public void incNbFiremen(){
+		nbFiremen++;
 	}
 
 	public int getNbBurnt(){
@@ -463,8 +468,12 @@ public class Model extends SimState {
 	public int getNbFire(){
 		return nbFire;
 	}
-
+	
 	public int getNbDied(){
 		return nbDied;
+	}
+
+	public int getNbFiremen(){
+		return nbFiremen;
 	}
 }

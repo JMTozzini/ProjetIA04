@@ -34,7 +34,7 @@ public class AgentCamion extends AgentPompier {
 		setObjectif();
 		done = deplacement();
 		if(!done && empty==false){
-			done = setPieton();
+			done = setPieton(aModel);
 		}
 		if(!done){
 			eteindreFeu();
@@ -149,7 +149,7 @@ public class AgentCamion extends AgentPompier {
 		return false; // aucune action n'a été faite
 	}
 
-	private boolean setPieton() {
+	private boolean setPieton(Model model) {
 		// Le camion est à l'arrêt
 		int nbPietonsRestant = ConstantesAgents.NB_PIETON_PAR_CAMION, dist=0;
 
@@ -164,6 +164,7 @@ public class AgentCamion extends AgentPompier {
 		while(nbPietonsRestant > 0 && itVoisin.hasNext()){
 			aCase = (AgentEnvironnement) itVoisin.next();
 			AgentPieton pieton = new AgentPieton(ConstantesAgents.RES_PIETON, ConstantesAgents.DEP_PIETON, ConstantesAgents.FORCE_PIETON, ConstantesAgents.PERCEPTION_PIETON);
+			model.incNbFiremen();
 			aModel.getYard().setObjectLocation(pieton, aCase.getLocation());
 			pieton.setLocation(aCase.getLocation());
 			nbPietonsRestant--;

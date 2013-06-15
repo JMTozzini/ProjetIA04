@@ -29,12 +29,13 @@ import com.ia04.constantes.ConstantesGenerales;
 
 public class Vue extends GUIState{
 
-	private Display2D display, displayChart;
-	private JFrame displayFrame, chartFrame;
+	private Display2D display, displayChart, displayChartFiremen;
+	private JFrame displayFrame, chartFrame, chartFiremenFrame;
 	private SparseGridPortrayal2D yardPortrayal;
 	private org.jfree.data.xy.XYSeries seriesFire;    // les donn�es � afficher sur le chart
 	private org.jfree.data.xy.XYSeries seriesBurnt;    // les donn�es � afficher sur le chart
-	private sim.util.media.chart.TimeSeriesChartGenerator chart;  // le chart de monitoring
+	private org.jfree.data.xy.XYSeries seriesFiremen;    // les donn�es � afficher sur le chart
+	private sim.util.media.chart.TimeSeriesChartGenerator chart, chartFiremen;  // les charts de monitoring
 
 	public Vue(SimState iState) {
 		super(iState);
@@ -113,14 +114,19 @@ public class Vue extends GUIState{
 	@SuppressWarnings("serial")
 	private void setupChart() {
 		chart.removeAllSeries();
+		chartFiremen.removeAllSeries();
 		seriesFire = new org.jfree.data.xy.XYSeries(
 				"FireSeries",
 				false);
 		seriesBurnt = new org.jfree.data.xy.XYSeries(
 				"BurntSeries",
 				false);
+		seriesFiremen = new org.jfree.data.xy.XYSeries(
+				"FiremenSeries",
+				false);
 		chart.addSeries(seriesFire, null);
 		chart.addSeries(seriesBurnt, null);
+		chartFiremen.addSeries(seriesFiremen, null);
 		scheduleRepeatingImmediatelyAfter(new Steppable()
 		{
 			public void step(SimState state)
@@ -130,17 +136,20 @@ public class Vue extends GUIState{
 				double time = state.schedule.getTime();
 				double nbFire = aModel.getNbFire();
 				double nbBurnt = aModel.getNbBurnt();
+				double nbFiremen = aModel.getNbFiremen();
 
 				// now add the data
 				if (time >= Schedule.EPOCH && time < Schedule.AFTER_SIMULATION)
 				{
 					seriesFire.add(time, nbFire, true);
 					seriesBurnt.add(time, nbBurnt, true);
+					seriesFiremen.add(time, nbFiremen, true);
 
 					// we're in the model thread right now, so we shouldn't directly
 					// update the chart.  Instead we request an update to occur the next
 					// time that control passes back to the Swing event thread.
 					chart.updateChartLater(state.schedule.getSteps());
+					chartFiremen.updateChartLater(state.schedule.getSteps());
 				}
 			}
 		});
@@ -158,12 +167,18 @@ public class Vue extends GUIState{
 		display.attach(yardPortrayal, "yard");
 
 
-
+		
 		displayChart = new Display2D(ConstantesGenerales.CHART_FRAME_WIDTH, ConstantesGenerales.CHART_FRAME_HEIGHT, this);
 		chart = new sim.util.media.chart.TimeSeriesChartGenerator();
-		chart.setTitle("Title");
-		chart.setXAxisLabel("Time");
+		chart.setTitle("Chart");
+		chart.setXAxisLabel("Steps");
 		chart.setYAxisLabel("Cases");
+
+		displayChartFiremen = new Display2D(ConstantesGenerales.CHART_FRAME_WIDTH, ConstantesGenerales.CHART_FRAME_HEIGHT, this);
+		chartFiremen = new sim.util.media.chart.TimeSeriesChartGenerator();
+		chartFiremen.setTitle("Chart");
+		chartFiremen.setXAxisLabel("Steps");
+		chartFiremen.setYAxisLabel("Firemen alive");
 		
 		
 		chartFrame = displayChart.createFrame();
@@ -173,6 +188,15 @@ public class Vue extends GUIState{
 		chartFrame.setVisible(true);
 		chartFrame.pack();
 		displayChart.add(chart);
+		
+		
+		chartFiremenFrame = displayChartFiremen.createFrame();
+		chartFiremenFrame.setTitle("Monithoring chart Firemen");
+		chartFiremenFrame.setLocationRelativeTo(null);
+		iController.registerFrame(chartFiremenFrame);
+		chartFiremenFrame.setVisible(true);
+		chartFiremenFrame.pack();
+		displayChartFiremen.add(chartFiremen);
 		// the console automatically moves itself to the right of all
 		// of its registered frames -- you might wish to rearrange the
 		// location of all the windows, including the console, at this
