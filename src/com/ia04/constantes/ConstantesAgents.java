@@ -32,7 +32,7 @@ public class ConstantesAgents {
 	public static int OUEST	= 4;
 	
 	// Nombres Agents Pompiers
-	public static int NB_CAMION            = 1;
+	public static int NB_CAMION            = 3;
 	public static int NB_PIETON_PAR_CAMION = 5;
 	public static int NB_CANDAIR           = 1;
 	

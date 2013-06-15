@@ -29,13 +29,15 @@ public class AgentCamion extends AgentPompier {
 	@Override
 	public void step(SimState iModel) {
 		aModel = (Model) iModel;
+		boolean done = false;
 		setObjectif();
-		int status = deplacement();
-		if(status == 0 && empty==false){
-			setPieton(aModel,this.getLocation());
-			empty = true;
+		done = deplacement();
+		if(!done && empty==false){
+			done = setPieton();
 		}
-		eteindreFeu();
+		if(!done){
+			eteindreFeu();
+		}
 		// survivre(); // invincibles
 	}
 	
@@ -103,7 +105,7 @@ public class AgentCamion extends AgentPompier {
 		}
 	}
 
-	private int deplacement() {
+	private boolean deplacement() {
 		// Les camions peuvent se doubler mais pas s'arrêter sur la même case
 		Bag aRoutesDeplacement = new Bag();
 		if (aRoutes.numObjs > 0 && !getLocation().equals(aObjectif.getLocation())){
@@ -115,66 +117,70 @@ public class AgentCamion extends AgentPompier {
 					aRoutesDeplacement.remove(aRoute);
 				}
 			}
+			AgentEnvironnement aObjectifDeplacement = getNearestAgent(aRoutesDeplacement, aObjectif.getLocation());
+			if(aObjectifDeplacement != null){
+				setLocation(aObjectifDeplacement.getLocation());
+				aModel.getYard().setObjectLocation(this, aObjectifDeplacement.getLocation());
+				return true; // une action a été faite
+			}
 		}
-		AgentEnvironnement aObjectifDeplacement = getNearestAgent(aRoutesDeplacement, aObjectif.getLocation());
-		if(aObjectifDeplacement != null){
-			setLocation(aObjectifDeplacement.getLocation());
-			aModel.getYard().setObjectLocation(this, aObjectifDeplacement.getLocation());
-		}
-		return 1;
+		return false; // aucune action n'a été faite
 	}
 
-	private void setPieton(Model aModel, Int2D location) {
+	private boolean setPieton() {
 		// Le camion est à l'arrêt
 		int nbPietonsRestant = ConstantesAgents.NB_PIETON_PAR_CAMION, dist=0;
-		System.out.println(location);
 
 		Bag aVoisins = null;
 		do{
 			dist++;
-			aVoisins = getEmptyNeighbors(aModel, location, dist);
+			aVoisins = getEmptyNeighbors(this.getLocation(), dist);
 		}while(aVoisins.size() < ConstantesAgents.NB_PIETON_PAR_CAMION);
 
-		System.out.println(aVoisins.size());
 		Iterator itVoisin = aVoisins.iterator();
 		AgentEnvironnement aCase = null;
-
-
 		while(nbPietonsRestant > 0 && itVoisin.hasNext()){
 			aCase = (AgentEnvironnement) itVoisin.next();
 			AgentPieton pieton = new AgentPieton(ConstantesAgents.RES_PIETON, ConstantesAgents.DEP_PIETON, ConstantesAgents.FORCE_PIETON, ConstantesAgents.PERCEPTION_PIETON);
 			aModel.getYard().setObjectLocation(pieton, aCase.getLocation());
 			pieton.setLocation(aCase.getLocation());
 			nbPietonsRestant--;
-		}
+		}		
+
+		empty = true;
+		
+		return true;
 	}
 
-	private Bag getEmptyNeighbors(Model aModel, Int2D location, int dist){
-		Bag aPlaces = null, aAgents = null;
-		aPlaces = aModel.getYard().getNeighborsMaxDistance(location.getX(), location.getY(), dist, false, aPlaces, null, null);
-		for(Object object : aPlaces){
-			System.out.println(object.getClass());
-			System.out.println();
-			if(object instanceof AgentPompier){
-				aAgents = aModel.getYard().getObjectsAtLocation(((AgentPompier) object).getLocation());
-			} else if(object instanceof AgentFeu){
-				aAgents = aModel.getYard().getObjectsAtLocation(((AgentFeu) object).getLocation());
-			} else if(object instanceof AgentCanadair){
-				aAgents = aModel.getYard().getObjectsAtLocation(((AgentCanadair) object).getLocation());
-			} else{
-				aAgents = aModel.getYard().getObjectsAtLocation(((AgentEnvironnement) object).getLocation());
+	private Bag getEmptyNeighbors(Int2D location, int dist){
+		Bag aVoisins = null;
+		aVoisins = aModel.getYard().getNeighborsMaxDistance(location.getX(), location.getY(), dist, false, aVoisins, null, null);
+		// élimination des agents autres que environnement
+		Iterator itVoisins = aVoisins.iterator();
+		Object object;
+		Bag aPlaces = new Bag();
+		while(itVoisins.hasNext()){
+			object = itVoisins.next();
+			if (object instanceof AgentEnvironnement){
+				aPlaces.add(object);
 			}
-			for(Object agent : aAgents){
-				if(agent instanceof AgentFeu || agent instanceof AgentCamion || agent instanceof AgentPieton){
-					aPlaces.remove(object);
+		}
+		
+		// élimination des places occupées
+		for (Object aPlace : aPlaces){
+			Bag aAgents = aModel.getYard().getObjectsAtLocation(((AgentEnvironnement)aPlace).getLocation());
+			for (Object i : aAgents){
+				if((i instanceof AgentCamion) || (i instanceof AgentPieton) || (i instanceof AgentFeu)){
+					aPlaces.remove(aPlace);
 				}
 			}
 		}
+		
 		return aPlaces;
 	}
 
 	private void eteindreFeu() {
-
+		// TODO
 	}
 	
 	private Integer getNearestFireDistance(Bag iBagFeu, Int2D iLocation){
