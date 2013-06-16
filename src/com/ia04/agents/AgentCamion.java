@@ -184,9 +184,7 @@ public class AgentCamion extends AgentPompier {
 			if(i instanceof AgentFeu)
 			{
 				AgentFeu aAgent = (AgentFeu)i;
-//				System.out.println("Avant feu " + aAgent.toString() + " : resistance " + aAgent.getResistance());
-				aAgent.setResistance(aAgent.getResistance()-getForce());
-//				System.out.println("Apr�s feu " + aAgent.toString() + " : resistance " + aAgent.getResistance());
+				aAgent.reduceRes(aModel, getForce());
 			}
 		}
 	}

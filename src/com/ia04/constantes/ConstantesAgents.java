@@ -48,7 +48,7 @@ public class ConstantesAgents {
 	
 	// Force Pompiers
 	public static int FORCE_PIETON   = 2;
-	public static int FORCE_CAMION   = 5;
+	public static int FORCE_CAMION   = 6;
 	public static int FORCE_CANADAIR = 10;
 	
 	// Autres attributs
@@ -68,4 +68,19 @@ public class ConstantesAgents {
 	public static int DIST_EXTINCTION_CAMION   = 1;
 	public static int DIST_EXTINCTION_CANADAIR = 2;
 	
+	
+	//Probabilités pour le déplacement des pompiers
+	//Proba qu'il essaie de réduire la distance la + longue
+	public static int REDUCE_HIGHER = 50;
+	//Proba qu'il essaie de réduire la distance la + courte	
+	public static int REDUCE_LOWER = 30;
+	//Proba qu'il essaie d'augmenter la distance la + courte	
+	public static int INCREASE_LOWER = 15;
+	//Proba qu'il essaie d'augmenter la distance la + longue	
+	public static int INCREASE_HIGHER = 5;
+	
+	//Les piétons ont un certain nombre d'essai afin de trouver une bonne position pour se déplace
+	//Si a l'issue de ce nombre d'essai ils n'ont pas réussi à trouver une place correcte
+	//Ils passent leur tour
+	public static int TRY_POSITION = 5;
 }

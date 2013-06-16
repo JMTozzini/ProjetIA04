@@ -23,7 +23,16 @@ public abstract class AgentPompier implements Steppable {
 
 	// Autres
 	protected Stoppable stp;
+	protected AgentFeu feu; //RŽfŽrence le feu en train d'tre Žteint par cet agent
 	
+	public AgentFeu getFeu() {
+		return feu;
+	}
+
+	public void setFeu(AgentFeu feu) {
+		this.feu = feu;
+	}
+
 	public AgentPompier(int iResistance, int iDeplacement, int iForce, int iPerception){
 		resistance = iResistance;
 		deplacement = iDeplacement;
@@ -130,13 +139,15 @@ public abstract class AgentPompier implements Steppable {
 	public void setResistance(int resistance) {
 		this.resistance = resistance;
 	}
-	
-	public void redRes(int iForce)
-	{
-		if(this.resistance > 0)
-			this.resistance -= iForce;
+	public void reduceRes(Model iModel, int force){
+		this.resistance -= force;
+		if(resistance<=0){
+			this.getStp().stop();
+			iModel.getYard().remove(this);
+			iModel.decNbFiremen();
+			iModel.incNbDied();
+		}
 	}
-	
 	public int getDeplacement() {
 		return deplacement;
 	}

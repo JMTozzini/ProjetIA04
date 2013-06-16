@@ -86,11 +86,10 @@ public class AgentFeu implements Steppable {
 						}
 					}
 				}
-			}
-			else if(i instanceof AgentPieton)
-			{
-				AgentPieton aAgentPieton = (AgentPieton)i;
-				aAgentPieton.redRes(this.getForce());
+			}else if(i instanceof AgentPieton && ((AgentPompier)i).getFeu() != this){
+				//Les pompiers ne peuvent se faire attaquer par le feu qu'ils sont en train d'Žteindre
+				((AgentPompier)i).reduceRes(aModel, force);
+				
 			}
 		}
 	}
@@ -115,8 +114,18 @@ public class AgentFeu implements Steppable {
 		this.resistance = resistance;
 	}
 	
-	public void reduceRes(int force) {
-		this.setResistance(this.getResistance()-force);
+	public void reduceRes(Model iModel, int force) {
+		this.resistance -= force;
+		if(resistance<=0){
+			for(Object agent: iModel.getYard().getObjectsAtLocation(this.getX(), this.getY())){
+			//L'environnement o le feu a ŽtŽ Žteint ne peut s'enflammer ˆ nouveau
+				if(agent instanceof AgentEnvironnement)
+					((AgentEnvironnement)agent).setInflammable(false);
+			}
+			this.getStp().stop();
+			iModel.getYard().remove(this);
+			iModel.decNbFire();
+		}
 	}
 
 

@@ -460,6 +460,10 @@ public class Model extends SimState {
 	public void incNbFiremen(){
 		nbFiremen++;
 	}
+	
+	public void decNbFiremen(){
+		nbFiremen--;
+	}
 
 	public int getNbBurnt(){
 		return nbBurnt;
