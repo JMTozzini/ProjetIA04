@@ -68,7 +68,7 @@ public class Vue extends GUIState{
 						new RectanglePortrayal2D(new Color(92, 51, 23), 1, true), 	// TYPE_HABITATION
 						new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
 						new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
-						new OvalPortrayal2D(Color.BLACK, 1, true),					// TYPE_BRULE
+						new RectanglePortrayal2D(Color.BLACK, 1, true),					// TYPE_BRULE
 						// Ordre inversement liée à l'importance (plus important en dernier)
 						})
 				);

@@ -44,8 +44,8 @@ public abstract class AgentPompier implements Steppable {
 	
 	protected boolean RapprochementFeu(AgentFeu iAgentFeu, Model iModel, Integer iDist)
 	{
-
-//		System.out.println("rapprochement");
+		if(iAgentFeu == null)
+			return true;
 		// induire un random 
 		iModel.getYard().remove(this);
 		if(iDist<this.getDeplacement()) // téléportation
@@ -63,25 +63,27 @@ public abstract class AgentPompier implements Steppable {
 			
 			while(aDeplacementRestant > 0)
 			{
-				if(aDeltaX>0)
+				int aRandom = iModel.random.nextInt(2);
+				
+				if(aDeltaX>0 && aRandom==0)
 				{
 					aDeltaX--;
 					this.setX(this.getX()-1);
 					aDeplacementRestant--;
 				}
-				else if(aDeltaX<0)
+				else if(aDeltaX<0 && aRandom==0)
 				{
 					aDeltaX++;
 					this.setX(this.getX()+1);
 					aDeplacementRestant--;
 				}
-				else if(aDeltaY>0)
+				else if(aDeltaY>0 && aRandom==1)
 				{
 					aDeltaY--;
 					this.setY(this.getY()-1);
 					aDeplacementRestant--;
 				}
-				else if(aDeltaY<0)
+				else if(aDeltaY<0 && aRandom==1)
 				{
 					aDeltaY++;
 					this.setY(this.getY()+1);

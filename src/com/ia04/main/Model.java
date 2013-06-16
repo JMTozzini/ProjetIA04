@@ -303,9 +303,9 @@ public class Model extends SimState {
 	}
 
 	private void setCamion(){
-		// les camions sont placé à partir d'une route prise au hasard
+		// les camions sont placï¿½ ï¿½ partir d'une route prise au hasard
 		Bag aAllAgents = yard.getAllObjects();
-		// élimination des agents autres que routes
+		// ï¿½limination des agents autres que routes
 		Bag aRoutes = new Bag();
 		Iterator itAllAgents = aAllAgents.iterator();
 		Object object;
@@ -420,12 +420,25 @@ public class Model extends SimState {
 	private void setCanadair(){
 		for (int i = 0; i < ConstantesAgents.NB_CANDAIR; i++)
 		{
+			int aRandomPlacement = random.nextInt(4);
 			AgentCanadair aAgentCan = new AgentCanadair(
 					ConstantesAgents.RES_CANADAIR, 
 					ConstantesAgents.DEP_CANADAIR, 
 					ConstantesAgents.FORCE_CANADAIR,
-					ConstantesAgents.PERCEPTION_CANADAIR);
-			Int2D aLocation = new Int2D(-1, random.nextInt(yard.getHeight()));
+					ConstantesAgents.PERCEPTION_CANADAIR,
+					aRandomPlacement);
+			Int2D aLocation = null;
+			if(aRandomPlacement==0)
+				aLocation = new Int2D(-1, random.nextInt(yard.getHeight()));
+			else if(aRandomPlacement==1)
+				aLocation = new Int2D(random.nextInt(yard.getWidth()), -1);
+			else if(aRandomPlacement==2)
+				aLocation = new Int2D(yard.getWidth(), random.nextInt(yard.getHeight()));
+			else if(aRandomPlacement==3)
+				aLocation = new Int2D(random.nextInt(yard.getWidth()), yard.getHeight());
+			
+			aAgentCan.setOrigine(aLocation);
+			aAgentCan.setLocation(aLocation);
 			yard.setObjectLocation(aAgentCan, aLocation);
 			aAgentCan.setStp(schedule.scheduleRepeating(aAgentCan));
 		}

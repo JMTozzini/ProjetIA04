@@ -18,9 +18,13 @@ public class AgentPieton extends AgentPompier {
 		Model aModel = (Model) iModel;
 		if(!vivant())
 		{
-			System.out.println("pompier mort");
 			this.getStp().stop();
-			aModel.getYard().remove(this);	
+			aModel.getYard().remove(this);
+			aModel.incNbDied();
+		}
+		else if (aModel.schedule.getSteps()%5 == 0) // petite régénération
+		{
+			this.setResistance(getResistance()+1);
 		}
 		
 		AgentFeu aAgentFeu = null;
@@ -143,7 +147,8 @@ public class AgentPieton extends AgentPompier {
 		}
 		catch(Exception e){
 //			System.out.println("["+x+","+y+"]");
-			System.exit(0);
+//			System.exit(0);
+			return false;
 		}
 		return true;
 	}

@@ -84,10 +84,7 @@ public class AgentEnvironnement implements Steppable, Valuable {
 		return (type-1); // 0 -> 7
 	}
 
-	public void step(SimState iModel) {
-		if(stp==null)
-			System.out.println(this.toString() + " stp null");
-		
+	public void step(SimState iModel) {		
 		Model aModel = (Model) iModel;
 		if(this.isInflammable() && this.resInterne == 0 && this.getType() != ConstantesAgents.TYPE_BRULE)
 		{

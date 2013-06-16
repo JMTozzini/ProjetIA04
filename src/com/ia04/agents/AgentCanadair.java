@@ -14,8 +14,11 @@ public class AgentCanadair extends AgentPompier {
 
 	boolean action = false;
 	boolean rapprochement = true;
+	int numero;
+	int origineX;
+	int origineY;
 	
-	public AgentCanadair(int iResistance, int iDeplacement,int iForce, int iPerception) {
+	public AgentCanadair(int iResistance, int iDeplacement,int iForce, int iPerception, int numero) {
 		super(iResistance, iDeplacement,iForce, iPerception);
 	}
 	
@@ -23,18 +26,16 @@ public class AgentCanadair extends AgentPompier {
 	public void step(SimState iModel) {
 		Model aModel = (Model) iModel;
 		AgentFeu aAgentFeu = null;
-//		System.out.println("agent canadair" + this);
-		if(iModel.schedule.getSteps()%ConstantesAgents.INTERVAL_ACTION_CANADAIR==0 && iModel.schedule.getSteps()>0)
+		if(iModel.schedule.getSteps()%(ConstantesAgents.INTERVAL_ACTION_CANADAIR+5*numero)==0 && iModel.schedule.getSteps()>0)
 			action = true;
 		
 		if(action && rapprochement)
 		{
 			HashMap<String, Object> iValues = new HashMap<String, Object>();
 			iValues = detectionFeu(aModel);
-//			System.out.println(iValues);
 			aAgentFeu = (AgentFeu)iValues.get("agent");
-			Integer aDpc = (Integer)iValues.get("distance");
-			if(RapprochementFeu(aAgentFeu, aModel, aDpc))
+			Integer aDistance = (Integer)iValues.get("distance");
+			if(RapprochementFeu(aAgentFeu, aModel, aDistance))
 			{
 				rapprochement = false;
 				eteindreFeu(aModel);
@@ -52,7 +53,6 @@ public class AgentCanadair extends AgentPompier {
 	}
 	
 	private HashMap<String, Object> detectionFeu(Model iModel){
-//		System.out.println("detection");
 		HashMap<String, Object> oValues = new HashMap<String, Object>();
 		AgentFeu oAgent = null;
 		for (int i=1; i < iModel.getYard().getHeight(); i++)
@@ -60,7 +60,7 @@ public class AgentCanadair extends AgentPompier {
 			Bag aAgents = iModel.getYard().getNeighborsMaxDistance(this.getX(), this.getY(), i, false, null, null, null);
 			oAgent = checkAgentFeu(aAgents);
 			if(oAgent != null)
-			{;
+			{
 				oValues.put("agent", oAgent);
 				oValues.put("distance", new Integer(i));
 				return oValues;			
@@ -75,7 +75,6 @@ public class AgentCanadair extends AgentPompier {
 		{
 			for(Object i:aAgents)
 			{
-				System.out.println(i);
 				if(i instanceof AgentFeu)
 				{
 					AgentFeu aAgent = (AgentFeu)i;
@@ -86,14 +85,21 @@ public class AgentCanadair extends AgentPompier {
 	}
 	
 	private boolean EloignerFeu(Model iModel)
-	{
-//		System.out.println("éloignement");
-		
+	{		
 		// temporaire
 		iModel.getYard().remove(this);
-		Int2D aLocation = new Int2D(-1, iModel.random.nextInt(iModel.getYard().getHeight()));
-		iModel.getYard().setObjectLocation(this, aLocation);
-		this.setLocation(aLocation);
-		return true;
+		AgentFeu aFakeAgentFeu = new AgentFeu(1, 1);
+		aFakeAgentFeu.setLocation(new Int2D(origineX, origineY));
+		int aDist = Math.abs(this.getY()-origineY)+ Math.abs(this.getX() - origineX);
+		if(RapprochementFeu(aFakeAgentFeu, iModel, aDist))
+			return true;
+		else
+			return false;
+	}
+	
+	public void setOrigine(Int2D iLocation)
+	{
+		origineX = iLocation.x;
+		origineY = iLocation.y;
 	}
 }
