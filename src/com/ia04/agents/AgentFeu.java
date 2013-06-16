@@ -63,7 +63,7 @@ public class AgentFeu implements Steppable {
 					if(aAgentEnv.getX() == this.getX() && aAgentEnv.getY() == this.getY())
 					{
 						aAgentEnv.reduceResInterne(this.getForce());
-						if(aAgentEnv.getResInterne()==0) // Destruction du Feu car plus rien a bruler
+						if(aAgentEnv.getResInterne()<=0) // Destruction du Feu car plus rien a bruler
 						{
 							aModel.incNbBurnt();
 							aModel.decNbFire();
@@ -76,7 +76,7 @@ public class AgentFeu implements Steppable {
 					{
 						aAgentEnv.reduceResExterne(this.getForce());
 						Int2D aLocation = new Int2D(aAgentEnv.getX(), aAgentEnv.getY());
-						if(aAgentEnv.getResExterne()==0 && aModel.getYard().numObjectsAtLocation(aLocation)==1) // Expansion du Feu
+						if(aAgentEnv.getResExterne()<=0 && aModel.getYard().numObjectsAtLocation(aLocation)==1) // Expansion du Feu
 						{
 							AgentFeu aAgentFeu = new AgentFeu(ConstantesAgents.FEU_FORCE, ConstantesAgents.FEU_RES);
 							aAgentFeu.setLocation(aLocation);
@@ -86,10 +86,55 @@ public class AgentFeu implements Steppable {
 						}
 					}
 				}
-			}else if(i instanceof AgentPieton && ((AgentPompier)i).getFeu() != this){
-				//Les pompiers ne peuvent se faire attaquer par le feu qu'ils sont en train d'Žteindre
-				((AgentPompier)i).reduceRes(aModel, force);
-				
+				else if(aAgentEnv.getType()==ConstantesAgents.TYPE_ROUTE && aModel.schedule.getSteps()%ConstantesAgents.VIT_PASSAGE_ROUTE==0)
+				{
+					int aSens = aAgentEnv.getSens();
+					if(aSens==ConstantesAgents.NORD || aSens==ConstantesAgents.SUD)
+					{
+						if(aAgentEnv.getX() > this.getX() && aAgentEnv.getY() == this.getY() 
+								&& aAgentEnv.getX()+1 < aModel.getYard().getWidth())
+							actionFeu(aModel, aAgentEnv, aAgentEnv.getX()+1, aAgentEnv.getY());
+						else if(aAgentEnv.getX() < this.getX() && aAgentEnv.getY() == this.getY()
+								&& aAgentEnv.getX()-1 > 0)
+							actionFeu(aModel, aAgentEnv, aAgentEnv.getX()-1, aAgentEnv.getY());
+					}
+					
+					if(aSens==ConstantesAgents.OUEST || aSens==ConstantesAgents.EST)
+					{
+						if(aAgentEnv.getY() > this.getY() && aAgentEnv.getX() == this.getX() 
+								&& aAgentEnv.getY()+1 < aModel.getYard().getHeight())
+							actionFeu(aModel, aAgentEnv, aAgentEnv.getX(), aAgentEnv.getY()+1);
+						else if(aAgentEnv.getY() < this.getY() && aAgentEnv.getX() == this.getX()
+								&& aAgentEnv.getY()-1 > 0)
+							actionFeu(aModel, aAgentEnv, aAgentEnv.getX(), aAgentEnv.getY()-1);
+					}
+				}
+			}
+			else if(i instanceof AgentPieton && ((AgentPompier)i).getFeu() != this){
+				//Les pompiers ne peuvent se faire attaquer par le feu qu'ils sont en train d'�teindre
+				((AgentPompier)i).reduceRes(force);
+			}
+		}
+	}
+	
+	private void actionFeu(Model iModel, AgentEnvironnement iAgentEnv, Integer iX, Integer iY)
+	{
+		Int2D aLocation = new Int2D(iX, iY);
+		Bag aAgents = iModel.getYard().getObjectsAtLocation(aLocation);
+		if(aAgents != null && aAgents.size()==1)
+		{
+			AgentEnvironnement aAgentEnv = (AgentEnvironnement)aAgents.get(0);
+			if(aAgentEnv.isInflammable())
+			{
+				aAgentEnv.reduceResExterne(this.getForce());
+				if(aAgentEnv.getResExterne()<=0)
+				{
+					AgentFeu aAgentFeu = new AgentFeu(ConstantesAgents.FEU_FORCE, ConstantesAgents.FEU_RES);
+					aAgentFeu.setLocation(aLocation);
+					iModel.getYard().setObjectLocation(aAgentFeu, aLocation);
+					aAgentFeu.setStp(iModel.schedule.scheduleRepeating(aAgentFeu));
+					iModel.incNbFire();
+				}				
 			}
 		}
 	}
@@ -118,7 +163,7 @@ public class AgentFeu implements Steppable {
 		this.resistance -= force;
 		if(resistance<=0){
 			for(Object agent: iModel.getYard().getObjectsAtLocation(this.getX(), this.getY())){
-			//L'environnement o� le feu a ŽtŽ Žteint ne peut s'enflammer ˆ nouveau
+			//L'environnement o� le feu a �t� �teint ne peut s'enflammer � nouveau
 				if(agent instanceof AgentEnvironnement)
 					((AgentEnvironnement)agent).setInflammable(false);
 			}

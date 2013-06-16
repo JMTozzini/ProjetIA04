@@ -23,7 +23,7 @@ public abstract class AgentPompier implements Steppable {
 
 	// Autres
 	protected Stoppable stp;
-	protected AgentFeu feu; //RŽfŽrence le feu en train d'�tre Žteint par cet agent
+	protected AgentFeu feu; //R�f�rence le feu en train d'�tre �teint par cet agent
 	
 	public AgentFeu getFeu() {
 		return feu;
@@ -53,8 +53,8 @@ public abstract class AgentPompier implements Steppable {
 	
 	protected boolean RapprochementFeu(AgentFeu iAgentFeu, Model iModel, Integer iDist)
 	{
-
-//		System.out.println("rapprochement");
+		if(iAgentFeu == null)
+			return true;
 		// induire un random 
 		iModel.getYard().remove(this);
 		if(iDist<this.getDeplacement()) // tÃ©lÃ©portation
@@ -72,25 +72,27 @@ public abstract class AgentPompier implements Steppable {
 			
 			while(aDeplacementRestant > 0)
 			{
-				if(aDeltaX>0)
+				int aRandom = iModel.random.nextInt(2);
+				
+				if(aDeltaX>0 && aRandom==0)
 				{
 					aDeltaX--;
 					this.setX(this.getX()-1);
 					aDeplacementRestant--;
 				}
-				else if(aDeltaX<0)
+				else if(aDeltaX<0 && aRandom==0)
 				{
 					aDeltaX++;
 					this.setX(this.getX()+1);
 					aDeplacementRestant--;
 				}
-				else if(aDeltaY>0)
+				else if(aDeltaY>0 && aRandom==1)
 				{
 					aDeltaY--;
 					this.setY(this.getY()-1);
 					aDeplacementRestant--;
 				}
-				else if(aDeltaY<0)
+				else if(aDeltaY<0 && aRandom==1)
 				{
 					aDeltaY++;
 					this.setY(this.getY()+1);
@@ -139,14 +141,11 @@ public abstract class AgentPompier implements Steppable {
 	public void setResistance(int resistance) {
 		this.resistance = resistance;
 	}
-	public void reduceRes(Model iModel, int force){
+	
+	public void reduceRes(int force){
 		this.resistance -= force;
-		if(resistance<=0){
-			this.getStp().stop();
-			iModel.getYard().remove(this);
-			iModel.decNbFiremen();
-		}
 	}
+	
 	public int getDeplacement() {
 		return deplacement;
 	}

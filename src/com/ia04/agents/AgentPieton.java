@@ -18,7 +18,15 @@ public class AgentPieton extends AgentPompier {
 	public void step(SimState iModel) {
 		Model aModel = (Model) iModel;
 		if(!vivant())
-			return;
+		{
+			this.getStp().stop();
+			aModel.getYard().remove(this);
+			aModel.decNbFiremen();
+		}
+		else if (aModel.schedule.getSteps()%5 == 0) // petite régénération
+		{
+			this.setResistance(getResistance()+1);
+		}
 		
 		AgentFeu aAgentFeu = null;
 		int i;
@@ -145,6 +153,9 @@ public class AgentPieton extends AgentPompier {
 			}
 		}
 		catch(Exception e){
+//			System.out.println("["+x+","+y+"]");
+//			System.exit(0);
+			return false;
 		}
 		return true;
 	}

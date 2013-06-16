@@ -15,15 +15,15 @@ public class ConstantesAgents {
 
 	// Resistances externe liÃ©es au type
 	public static int RES_EXT_VEG_FAIBLE	= 10;
-	public static int RES_EXT_VEG_MOY		= 20;
-	public static int RES_EXT_VEG_FORTE		= 30;
-	public static int RES_EXT_HABITATION	= 40;
+	public static int RES_EXT_VEG_MOY		= 110;
+	public static int RES_EXT_VEG_FORTE		= 160;
+	public static int RES_EXT_HABITATION	= 210;
 	
 	// Resistances interne liÃ©es au type
-	public static int RES_INT_VEG_FAIBLE	= 50;
-	public static int RES_INT_VEG_MOY		= 60;
-	public static int RES_INT_VEG_FORTE		= 70;
-	public static int RES_INT_HABITATION	= 80;
+	public static int RES_INT_VEG_FAIBLE	= 100;
+	public static int RES_INT_VEG_MOY		= 150;
+	public static int RES_INT_VEG_FORTE		= 200;
+	public static int RES_INT_HABITATION	= 250;
 	
 	// Sens pour Eau et Route
 	public static int NORD	= 1;
@@ -32,12 +32,12 @@ public class ConstantesAgents {
 	public static int OUEST	= 4;
 	
 	// Nombres Agents Pompiers
-	public static int NB_CAMION            = 3;
-	public static int NB_PIETON_PAR_CAMION = 5;
-	public static int NB_CANDAIR           = 1;
+	public static int NB_CAMION            = 4;
+	public static int NB_PIETON_PAR_CAMION = 6;
+	public static int NB_CANDAIR           = 2;
 	
 	// Resistance Pompiers
-	public static int RES_PIETON   = 100;
+	public static int RES_PIETON   = 300;
 	public static int RES_CAMION   = 1000;
 	public static int RES_CANADAIR = 10000;
 	
@@ -56,8 +56,9 @@ public class ConstantesAgents {
 	public static int NEW_OBJECTIF_MIN_DISTANCE = 3;
 	
 	// Caracteristiques Feu
-	public static int FEU_FORCE	= 1;
-	public static int FEU_RES	= 6;
+	public static int FEU_FORCE	= 3;
+	public static int FEU_RES	= 8;
+	public static int VIT_PASSAGE_ROUTE = 5;
 	
 	// Perception Pompiers
 	public static int PERCEPTION_PIETON   = 10;
@@ -65,22 +66,22 @@ public class ConstantesAgents {
 	public static int PERCEPTION_CANADAIR = 100;
 	
 	// Distance d'extinction du feu
-	public static int DIST_EXTINCTION_CAMION   = 1;
-	public static int DIST_EXTINCTION_CANADAIR = 2;
+	public static int DIST_EXTINCTION_CAMION   = 3;
+	public static int DIST_EXTINCTION_CANADAIR = 3;
 	
 	
-	//ProbabilitŽs pour le dŽplacement des pompiers
-	//Proba qu'il essaie de rŽduire la distance la + longue
+	//Probabilitï¿½s pour le dï¿½placement des pompiers
+	//Proba qu'il essaie de rï¿½duire la distance la + longue
 	public static int REDUCE_HIGHER = 50;
-	//Proba qu'il essaie de rŽduire la distance la + courte	
+	//Proba qu'il essaie de rï¿½duire la distance la + courte	
 	public static int REDUCE_LOWER = 30;
 	//Proba qu'il essaie d'augmenter la distance la + courte	
 	public static int INCREASE_LOWER = 15;
 	//Proba qu'il essaie d'augmenter la distance la + longue	
 	public static int INCREASE_HIGHER = 5;
 	
-	//Les piŽtons ont un certain nombre d'essai afin de trouver une bonne position pour se dŽplace
-	//Si a l'issue de ce nombre d'essai ils n'ont pas rŽussi ˆ trouver une place correcte
+	//Les piï¿½tons ont un certain nombre d'essai afin de trouver une bonne position pour se dï¿½place
+	//Si a l'issue de ce nombre d'essai ils n'ont pas rï¿½ussi ï¿½ trouver une place correcte
 	//Ils passent leur tour
 	public static int TRY_POSITION = 5;
 }
