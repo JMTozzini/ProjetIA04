@@ -89,7 +89,8 @@ public class AgentFeu implements Steppable {
 			}
 			else if(i instanceof AgentPieton)
 			{
-				
+				AgentPieton aAgentPieton = (AgentPieton)i;
+				aAgentPieton.redRes(this.getForce());
 			}
 		}
 	}

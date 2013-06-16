@@ -131,6 +131,12 @@ public abstract class AgentPompier implements Steppable {
 		this.resistance = resistance;
 	}
 	
+	public void redRes(int iForce)
+	{
+		if(this.resistance > 0)
+			this.resistance -= iForce;
+	}
+	
 	public int getDeplacement() {
 		return deplacement;
 	}
