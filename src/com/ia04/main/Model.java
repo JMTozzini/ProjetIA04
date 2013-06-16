@@ -16,14 +16,13 @@ import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesEnv;
 import com.ia04.constantes.ConstantesGenerales;
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class Model extends SimState {
 
 	private static final long serialVersionUID = 1L;
 
 	private SparseGrid2D yard;
-	private int nbBurnt=0, nbFire=0, nbDied=0, nbFiremen=0;
+	private int nbBurnt=0, nbFire=0, nbExtinguished=0, nbFiremen=0;
 	PropertyChangeSupport pcs= new PropertyChangeSupport(this);
 
 	public Model(long iSeed) {
@@ -44,7 +43,7 @@ public class Model extends SimState {
 	private void setMonithoringCst() {
 		nbBurnt=0;
 		nbFire=0; 
-		nbDied=0;
+		nbExtinguished=0;
 		nbFiremen=0;
 	}
 
@@ -453,8 +452,8 @@ public class Model extends SimState {
 		nbFire--;
 	}
 	
-	public void incNbDied(){
-		nbDied++;
+	public void incNbExtinguished(){
+		nbExtinguished++;
 	}
 
 	public void incNbFiremen(){
@@ -473,8 +472,8 @@ public class Model extends SimState {
 		return nbFire;
 	}
 	
-	public int getNbDied(){
-		return nbDied;
+	public int getNbExtinguished(){
+		return nbExtinguished;
 	}
 
 	public int getNbFiremen(){

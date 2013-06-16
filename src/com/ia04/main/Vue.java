@@ -35,6 +35,7 @@ public class Vue extends GUIState{
 	private org.jfree.data.xy.XYSeries seriesFire;    // les donn�es � afficher sur le chart
 	private org.jfree.data.xy.XYSeries seriesBurnt;    // les donn�es � afficher sur le chart
 	private org.jfree.data.xy.XYSeries seriesFiremen;    // les donn�es � afficher sur le chart
+	private org.jfree.data.xy.XYSeries seriesExtinguished;    // les donn�es � afficher sur le chart
 	private sim.util.media.chart.TimeSeriesChartGenerator chart, chartFiremen;  // les charts de monitoring
 
 	public Vue(SimState iState) {
@@ -124,8 +125,12 @@ public class Vue extends GUIState{
 		seriesFiremen = new org.jfree.data.xy.XYSeries(
 				"FiremenSeries",
 				false);
+		seriesExtinguished = new org.jfree.data.xy.XYSeries(
+				"ExtinguishedSeries",
+				false);
 		chart.addSeries(seriesFire, null);
 		chart.addSeries(seriesBurnt, null);
+		chart.addSeries(seriesExtinguished, null);
 		chartFiremen.addSeries(seriesFiremen, null);
 		scheduleRepeatingImmediatelyAfter(new Steppable()
 		{
@@ -137,12 +142,14 @@ public class Vue extends GUIState{
 				double nbFire = aModel.getNbFire();
 				double nbBurnt = aModel.getNbBurnt();
 				double nbFiremen = aModel.getNbFiremen();
+				double nbExtinguished = aModel.getNbExtinguished();
 
 				// now add the data
 				if (time >= Schedule.EPOCH && time < Schedule.AFTER_SIMULATION)
 				{
 					seriesFire.add(time, nbFire, true);
 					seriesBurnt.add(time, nbBurnt, true);
+					seriesExtinguished.add(time, nbExtinguished, true);
 					seriesFiremen.add(time, nbFiremen, true);
 
 					// we're in the model thread right now, so we shouldn't directly

@@ -23,7 +23,7 @@ public abstract class AgentPompier implements Steppable {
 
 	// Autres
 	protected Stoppable stp;
-	protected AgentFeu feu; //R�f�rence le feu en train d'�tre �teint par cet agent
+	protected AgentFeu feu; //RŽfŽrence le feu en train d'�tre Žteint par cet agent
 	
 	public AgentFeu getFeu() {
 		return feu;
@@ -57,7 +57,7 @@ public abstract class AgentPompier implements Steppable {
 //		System.out.println("rapprochement");
 		// induire un random 
 		iModel.getYard().remove(this);
-		if(iDist<this.getDeplacement()) // téléportation
+		if(iDist<this.getDeplacement()) // tÃ©lÃ©portation
 		{
 			iModel.getYard().setObjectLocation(this, iAgentFeu.getX(), iAgentFeu.getY());
 			this.setX(iAgentFeu.getX());
@@ -145,7 +145,6 @@ public abstract class AgentPompier implements Steppable {
 			this.getStp().stop();
 			iModel.getYard().remove(this);
 			iModel.decNbFiremen();
-			iModel.incNbDied();
 		}
 	}
 	public int getDeplacement() {

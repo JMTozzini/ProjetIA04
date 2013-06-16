@@ -39,7 +39,7 @@ public class AgentFeu implements Steppable {
 			this.getStp().stop();
 			aModel.getYard().remove(this);
 			
-			// rÃ©tablissement de l'environnement
+			// rÃƒÂ©tablissement de l'environnement
 			Bag aAgents = aModel.getYard().getObjectsAtLocation(this.getLocation());
 			for(Object aAgent: aAgents)
 			{
@@ -59,7 +59,7 @@ public class AgentFeu implements Steppable {
 				AgentEnvironnement aAgentEnv = (AgentEnvironnement)i;
 				if(aAgentEnv.isInflammable())
 				{
-					// Feu et AgentEnv inflammable sur la mÃªme case
+					// Feu et AgentEnv inflammable sur la mÃƒÂªme case
 					if(aAgentEnv.getX() == this.getX() && aAgentEnv.getY() == this.getY())
 					{
 						aAgentEnv.reduceResInterne(this.getForce());
@@ -87,7 +87,7 @@ public class AgentFeu implements Steppable {
 					}
 				}
 			}else if(i instanceof AgentPieton && ((AgentPompier)i).getFeu() != this){
-				//Les pompiers ne peuvent se faire attaquer par le feu qu'ils sont en train d'Žteindre
+				//Les pompiers ne peuvent se faire attaquer par le feu qu'ils sont en train d'Å½teindre
 				((AgentPompier)i).reduceRes(aModel, force);
 				
 			}
@@ -118,13 +118,14 @@ public class AgentFeu implements Steppable {
 		this.resistance -= force;
 		if(resistance<=0){
 			for(Object agent: iModel.getYard().getObjectsAtLocation(this.getX(), this.getY())){
-			//L'environnement o le feu a ŽtŽ Žteint ne peut s'enflammer ˆ nouveau
+			//L'environnement oï¿½ le feu a Å½tÅ½ Å½teint ne peut s'enflammer Ë† nouveau
 				if(agent instanceof AgentEnvironnement)
 					((AgentEnvironnement)agent).setInflammable(false);
 			}
 			this.getStp().stop();
 			iModel.getYard().remove(this);
 			iModel.decNbFire();
+			iModel.incNbExtinguished();
 		}
 	}
 
