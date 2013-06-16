@@ -18,11 +18,7 @@ public class AgentPieton extends AgentPompier {
 	public void step(SimState iModel) {
 		Model aModel = (Model) iModel;
 		if(!vivant())
-		{
-			System.out.println("pompier mort");
-			this.getStp().stop();
-			aModel.getYard().remove(this);	
-		}
+			return;
 		
 		AgentFeu aAgentFeu = null;
 		int i;
