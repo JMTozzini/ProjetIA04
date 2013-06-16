@@ -1,17 +1,19 @@
 package com.ia04.agents;
 
-import com.ia04.constantes.ConstantesAgents;
-import com.ia04.main.Model;
-import com.sun.xml.internal.ws.transport.http.DeploymentDescriptorParser;
+import java.util.HashMap;
 
 import sim.engine.SimState;
 import sim.util.Bag;
 import sim.util.Int2D;
 
+import com.ia04.constantes.ConstantesAgents;
+import com.ia04.main.Model;
+
 @SuppressWarnings("serial")
 public class AgentCanadair extends AgentPompier {
 
-	boolean feuAtteint=false;	
+	boolean action = false;
+	boolean rapprochement = true;
 	
 	public AgentCanadair(int iResistance, int iDeplacement,int iForce, int iPerception) {
 		super(iResistance, iDeplacement,iForce, iPerception);
@@ -20,40 +22,64 @@ public class AgentCanadair extends AgentPompier {
 	@Override
 	public void step(SimState iModel) {
 		Model aModel = (Model) iModel;
-		if((aModel.schedule.getSteps()%ConstantesAgents.INTERVAL_ACTION < aModel.getYard().getHeight()/this.getDeplacement())
-				&& (aModel.schedule.getSteps()>aModel.getYard().getHeight()/this.getDeplacement()))
+		AgentFeu aAgentFeu = null;
+//		System.out.println("agent canadair" + this);
+		if(iModel.schedule.getSteps()%ConstantesAgents.INTERVAL_ACTION_CANADAIR==0 && iModel.schedule.getSteps()>0)
+			action = true;
+		
+		if(action && rapprochement)
 		{
-			// detection agent feu le plus proche
-			AgentFeu aAgentFeu = null;
-			int i = 1;
-			for (i=1; i < aModel.getYard().getHeight(); i++)
+			HashMap<String, Object> iValues = new HashMap<String, Object>();
+			iValues = detectionFeu(aModel);
+//			System.out.println(iValues);
+			aAgentFeu = (AgentFeu)iValues.get("agent");
+			Integer aDpc = (Integer)iValues.get("distance");
+			if(RapprochementFeu(aAgentFeu, aModel, aDpc))
 			{
-				Bag aAgents = aModel.getYard().getNeighborsMaxDistance(this.getX(), this.getY(), i, false, null, null, null);
-				aAgentFeu = checkAgentFeu(aAgents);
-				if(aAgentFeu != null)
-				{
-					System.out.println(aAgentFeu);
-					break;				
-				}
+				rapprochement = false;
+				eteindreFeu(aModel);
 			}
-			if(!feuAtteint)
-				feuAtteint=RapprochementFeu(aAgentFeu, aModel, i);
-			eteindreFeu(aModel);
-			if(feuAtteint)
-				feuAtteint=EloignerFeu(aModel);
+		}
+		
+		if(action && !rapprochement)
+		{
+			if(EloignerFeu(aModel))
+			{
+				action = false;
+				rapprochement = true;
+			}
 		}
 	}
-
+	
+	private HashMap<String, Object> detectionFeu(Model iModel){
+//		System.out.println("detection");
+		HashMap<String, Object> oValues = new HashMap<String, Object>();
+		AgentFeu oAgent = null;
+		for (int i=1; i < iModel.getYard().getHeight(); i++)
+		{
+			Bag aAgents = iModel.getYard().getNeighborsMaxDistance(this.getX(), this.getY(), i, false, null, null, null);
+			oAgent = checkAgentFeu(aAgents);
+			if(oAgent != null)
+			{;
+				oValues.put("agent", oAgent);
+				oValues.put("distance", new Integer(i));
+				return oValues;			
+			}
+		}
+		return oValues;
+	}
+	
 	private void eteindreFeu(Model iModel){
-		Bag aAgents = iModel.getYard().getNeighborsAndCorrespondingPositionsMaxDistance(getX(), getY(), 2, false, null, null, null);
+		Bag aAgents = iModel.getYard().getNeighborsMaxDistance(getX(), getY(), ConstantesAgents.DIST_EXTINCTION_CANADAIR, false, null, null, null);
 		if(aAgents != null)
 		{
 			for(Object i:aAgents)
 			{
+				System.out.println(i);
 				if(i instanceof AgentFeu)
 				{
 					AgentFeu aAgent = (AgentFeu)i;
-					aAgent.setResistance(aAgent.getResistance()-getForce());
+					aAgent.reduceRes(getForce());
 				}
 			}			
 		}
@@ -61,39 +87,13 @@ public class AgentCanadair extends AgentPompier {
 	
 	private boolean EloignerFeu(Model iModel)
 	{
-		int aX = getX();
-		int aY = getY();
+//		System.out.println("éloignement");
 		
 		// temporaire
+		iModel.getYard().remove(this);
 		Int2D aLocation = new Int2D(-1, iModel.random.nextInt(iModel.getYard().getHeight()));
 		iModel.getYard().setObjectLocation(this, aLocation);
-		
-		Bag aAgents = iModel.getYard().getObjectsAtLocation(aX, aY);
-		if(aAgents!=null)
-		{
-			iModel.getYard().removeObjectsAtLocation(aX, aY);
-			for(Object i:aAgents)
-			{
-				if(!(i instanceof AgentCanadair))
-				{
-					if(i instanceof AgentPompier)
-					{
-						AgentPompier aAgent = (AgentPompier) i;
-						iModel.getYard().setObjectLocation(i, aAgent.getLocation());
-					}
-					else if(i instanceof AgentEnvironnement)
-					{
-						AgentEnvironnement aAgent = (AgentEnvironnement) i;
-						iModel.getYard().setObjectLocation(i, aAgent.getLocation());
-					}
-					else if(i instanceof AgentFeu)
-					{
-						AgentFeu aAgent = (AgentFeu) i;
-						iModel.getYard().setObjectLocation(i, aAgent.getLocation());	
-					}
-				}
-			}
-		}
+		this.setLocation(aLocation);
 		return true;
 	}
 }

@@ -1,14 +1,13 @@
 package com.ia04.agents;
 
-import com.ia04.constantes.ConstantesAgents;
-import com.ia04.constantes.ConstantesEnv;
-import com.ia04.main.Model;
-
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.engine.Stoppable;
 import sim.util.Bag;
 import sim.util.Int2D;
+
+import com.ia04.constantes.ConstantesAgents;
+import com.ia04.main.Model;
 
 public class AgentFeu implements Steppable {
 	
@@ -39,7 +38,19 @@ public class AgentFeu implements Steppable {
 			aModel.decNbFire();
 			this.getStp().stop();
 			aModel.getYard().remove(this);
+			
+			// rétablissement de l'environnement
+			Bag aAgents = aModel.getYard().getObjectsAtLocation(this.getLocation());
+			for(Object aAgent: aAgents)
+			{
+				if(aAgent instanceof AgentEnvironnement)
+				{
+					AgentEnvironnement aAgentEnv = (AgentEnvironnement) aAgent;
+					aAgentEnv.setInitRes();
+				}
+			}
 		}
+		
 		Bag aAgents = aModel.getYard().getNeighborsMaxDistance(x, y, 1, false, null, null, null);
 		for(Object i: aAgents)
 		{		
@@ -75,6 +86,10 @@ public class AgentFeu implements Steppable {
 						}
 					}
 				}
+			}
+			else if(i instanceof AgentPieton)
+			{
+				
 			}
 		}
 	}

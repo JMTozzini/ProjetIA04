@@ -52,7 +52,7 @@ public class ConstantesAgents {
 	public static int FORCE_CANADAIR = 10;
 	
 	// Autres attributs
-	public static int INTERVAL_ACTION = 50;
+	public static int INTERVAL_ACTION_CANADAIR = 50;
 	public static int NEW_OBJECTIF_MIN_DISTANCE = 3;
 	
 	// Caracteristiques Feu
@@ -66,6 +66,6 @@ public class ConstantesAgents {
 	
 	// Distance d'extinction du feu
 	public static int DIST_EXTINCTION_CAMION   = 1;
-	public static int DIST_EXTINCTION_CANADAIR = 1;
+	public static int DIST_EXTINCTION_CANADAIR = 2;
 	
 }

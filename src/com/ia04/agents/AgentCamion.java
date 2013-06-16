@@ -14,7 +14,7 @@ import sim.util.Int2D;
 public class AgentCamion extends AgentPompier {
 
 	/**
-	 * L'objectif est un agent route, contigu par des routes à l'agent camion,
+	 * L'objectif est un agent route, contigu par des routes ï¿½ l'agent camion,
 	 * sans autres agents pompiers dessus,
 	 * et pour lequel il y a le feu le plus proche
 	 */
@@ -46,7 +46,7 @@ public class AgentCamion extends AgentPompier {
 		AgentEnvironnement oldObjectif = aObjectif;
 		aObjectif = null;
 		
-		// détection des routes dans l'espace de perception
+		// dï¿½tection des routes dans l'espace de perception
 		aRoutes = aModel.getNeighborsByType(getLocation(), getPerception(), ConstantesAgents.TYPE_ROUTE);
 		
 		// elimination des routes non accessibles
@@ -54,7 +54,7 @@ public class AgentCamion extends AgentPompier {
 		boolean addAccessible = true;
 		while (addAccessible){
 			addAccessible = false;
-			for(Object aRoute : aRoutes){ // pour chaque route percu et non encore marquées comme accessible
+			for(Object aRoute : aRoutes){ // pour chaque route percu et non encore marquï¿½es comme accessible
 				Bag aVoisinsRoute = aModel.getNeighborsByType(((AgentEnvironnement)aRoute).getLocation(), 1, ConstantesAgents.TYPE_ROUTE);
 				for(Object aVoisin : aVoisinsRoute){ // pour chaque voisin de cette route, cherche si l'une d'entre elles est accessible
 					if(aRoutesAccessibles.contains(aVoisin)){
@@ -66,9 +66,9 @@ public class AgentCamion extends AgentPompier {
 			}
 		}
 		
-		aRoutes = aRoutesAccessibles; // réaffectation des routes candidates dans aRoutes
+		aRoutes = aRoutesAccessibles; // rï¿½affectation des routes candidates dans aRoutes
 		
-		// élimination des routes occupées
+		// ï¿½limination des routes occupï¿½es
 		for (Object aRoute : aRoutes){
 			Bag aAgents = aModel.getYard().getObjectsAtLocation(((AgentEnvironnement)aRoute).getLocation());
 			for (Object i : aAgents){
@@ -93,24 +93,24 @@ public class AgentCamion extends AgentPompier {
 			}
 		}
 		
-		// rajout de la case où se trouve le camion lui même
+		// rajout de la case oï¿½ se trouve le camion lui mï¿½me
 		aRoutes.addAll(aModel.getNeighborsByType(getLocation(), 0, ConstantesAgents.TYPE_ROUTE));
 		
 		if (aObjectif != null && oldObjectif != null && (getDistance(aObjectif.getLocation(), oldObjectif.getLocation()) < ConstantesAgents.NEW_OBJECTIF_MIN_DISTANCE) && aRoutes.contains(oldObjectif)){
 			aObjectif = oldObjectif;
 		}
 		if (aObjectif == null){
-			System.out.println("objectif : null");
+//			System.out.println("objectif : null");
 		} else {
-			System.out.println("objectif : " + aObjectif.toString());
+//			System.out.println("objectif : " + aObjectif.toString());
 		}
 	}
 
 	private boolean deplacement() {
-		// Les camions peuvent se doubler mais pas s'arrêter sur la même case
+		// Les camions peuvent se doubler mais pas s'arrï¿½ter sur la mï¿½me case
 		Bag aRoutesDeplacement = new Bag();
 		if (aRoutes.numObjs > 0 && aObjectif!= null && !getLocation().equals(aObjectif.getLocation())){
-			// cherche les routes accessibles qui sont à une distance de getDeplacement() au maximum
+			// cherche les routes accessibles qui sont ï¿½ une distance de getDeplacement() au maximum
 			aRoutesDeplacement = aModel.getNeighborsByType(getLocation(), getDeplacement(), ConstantesAgents.TYPE_ROUTE);
 			
 			// elimination des routes non accessibles
@@ -118,7 +118,7 @@ public class AgentCamion extends AgentPompier {
 			boolean addAccessible = true;
 			while (addAccessible){
 				addAccessible = false;
-				for(Object aRoute : aRoutesDeplacement){ // pour chaque route percu dans l'espace de déplacement et non encore marquées comme accessible
+				for(Object aRoute : aRoutesDeplacement){ // pour chaque route percu dans l'espace de dï¿½placement et non encore marquï¿½es comme accessible
 					Bag aVoisinsRoute = aModel.getNeighborsByType(((AgentEnvironnement)aRoute).getLocation(), 1, ConstantesAgents.TYPE_ROUTE);
 					for(Object aVoisin : aVoisinsRoute){ // pour chaque voisin de cette route, cherche si l'une d'entre elles est accessible
 						if(aRoutesAccessibles.contains(aVoisin)){
@@ -132,7 +132,7 @@ public class AgentCamion extends AgentPompier {
 			aRoutesDeplacement.clear();
 			aRoutesDeplacement = aRoutesAccessibles;
 			
-			// regarde si il s'agit bien de route possibles déterminées dans setObjectif
+			// regarde si il s'agit bien de route possibles dï¿½terminï¿½es dans setObjectif
 			for(Object aRoute : aRoutesDeplacement){
 				if(!aRoutes.contains(aRoute)){
 					aRoutesDeplacement.remove(aRoute);
@@ -143,14 +143,14 @@ public class AgentCamion extends AgentPompier {
 			if(aObjectifDeplacement != null){
 				setLocation(aObjectifDeplacement.getLocation());
 				aModel.getYard().setObjectLocation(this, aObjectifDeplacement.getLocation());
-				return true; // une action a été faite
+				return true; // une action a ï¿½tï¿½ faite
 			}
 		}
-		return false; // aucune action n'a été faite
+		return false; // aucune action n'a ï¿½tï¿½ faite
 	}
 
 	private boolean setPieton(Model model) {
-		// Le camion est à l'arrêt
+		// Le camion est ï¿½ l'arrï¿½t
 		int nbPietonsRestant = ConstantesAgents.NB_PIETON_PAR_CAMION, dist=0;
 
 		Bag aVoisins = null;
@@ -177,16 +177,16 @@ public class AgentCamion extends AgentPompier {
 	}
 
 	private void eteindreFeu() {
-		// recherche des feu assez proche pour être éteints
+		// recherche des feu assez proche pour ï¿½tre ï¿½teints
 		Bag aBagFeu = getFeuNeighbors(aModel, ConstantesAgents.DIST_EXTINCTION_CAMION);
 		for(Object i:  aBagFeu)
 		{
 			if(i instanceof AgentFeu)
 			{
 				AgentFeu aAgent = (AgentFeu)i;
-				System.out.println("Avant feu " + aAgent.toString() + " : resistance " + aAgent.getResistance());
+//				System.out.println("Avant feu " + aAgent.toString() + " : resistance " + aAgent.getResistance());
 				aAgent.setResistance(aAgent.getResistance()-getForce());
-				System.out.println("Après feu " + aAgent.toString() + " : resistance " + aAgent.getResistance());
+//				System.out.println("Aprï¿½s feu " + aAgent.toString() + " : resistance " + aAgent.getResistance());
 			}
 		}
 	}
@@ -194,7 +194,7 @@ public class AgentCamion extends AgentPompier {
 	private Bag getEmptyNeighbors(Int2D location, int dist){
 		Bag aVoisins = null;
 		aVoisins = aModel.getYard().getNeighborsMaxDistance(location.getX(), location.getY(), dist, false, aVoisins, null, null);
-		// élimination des agents autres que environnement
+		// ï¿½limination des agents autres que environnement
 		Iterator itVoisins = aVoisins.iterator();
 		Object object;
 		Bag aPlaces = new Bag();
@@ -205,7 +205,7 @@ public class AgentCamion extends AgentPompier {
 			}
 		}
 		
-		// élimination des places occupées
+		// ï¿½limination des places occupï¿½es
 		for (Object aPlace : aPlaces){
 			Bag aAgents = aModel.getYard().getObjectsAtLocation(((AgentEnvironnement)aPlace).getLocation());
 			for (Object i : aAgents){
@@ -243,10 +243,10 @@ public class AgentCamion extends AgentPompier {
 	}
 	
 	private int getDistance(Int2D iLocation1, Int2D iLocation2){
-		// Diagonales biaisées
+		// Diagonales biaisï¿½es
 		// return Math.max(Math.abs(iLocation1.x - iLocation2.x), Math.abs(iLocation1.y - iLocation2.y));
 		
-		// Diagonales non biaisées
+		// Diagonales non biaisï¿½es
 		return Math.abs(iLocation1.x - iLocation2.x) + Math.abs(iLocation1.y - iLocation2.y);
 	}
 }

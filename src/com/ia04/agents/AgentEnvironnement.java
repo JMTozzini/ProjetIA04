@@ -50,6 +50,11 @@ public class AgentEnvironnement implements Steppable, Valuable {
 		this.sens = -1 ;
 		this.stp = null;
 		
+		this.setInitRes();
+	}
+	
+	public void setInitRes()
+	{
 		switch (type) {
 		case 1: // TYPE_VEG_FAIBLE
 			resInterne = ConstantesAgents.RES_INT_VEG_FAIBLE;

@@ -44,7 +44,10 @@ public abstract class AgentPompier implements Steppable {
 	
 	protected boolean RapprochementFeu(AgentFeu iAgentFeu, Model iModel, Integer iDist)
 	{
+
+//		System.out.println("rapprochement");
 		// induire un random 
+		iModel.getYard().remove(this);
 		if(iDist<this.getDeplacement()) // téléportation
 		{
 			iModel.getYard().setObjectLocation(this, iAgentFeu.getX(), iAgentFeu.getY());
@@ -57,9 +60,6 @@ public abstract class AgentPompier implements Steppable {
 			Integer aDeplacementRestant = this.getDeplacement();
 			Integer aDeltaX = this.getX() - iAgentFeu.getX();
 			Integer aDeltaY = this.getY() - iAgentFeu.getY();
-			
-			int aX = this.getX();
-			int aY = this.getY();
 			
 			while(aDeplacementRestant > 0)
 			{
@@ -89,33 +89,6 @@ public abstract class AgentPompier implements Steppable {
 				}
 			}
 			iModel.getYard().setObjectLocation(this, this.getX(), this.getY());
-			
-			Bag aAgents = iModel.getYard().getObjectsAtLocation(aX, aY);
-			if(aAgents!=null)
-			{
-				iModel.getYard().removeObjectsAtLocation(aX, aY);
-				for(Object i:aAgents)
-				{
-					if(!(i instanceof AgentCanadair))
-					{
-						if(i instanceof AgentPompier)
-						{
-							AgentPompier aAgent = (AgentPompier) i;
-							iModel.getYard().setObjectLocation(i, aAgent.getLocation());
-						}
-						else if(i instanceof AgentEnvironnement)
-						{
-							AgentEnvironnement aAgent = (AgentEnvironnement) i;
-							iModel.getYard().setObjectLocation(i, aAgent.getLocation());
-						}
-						else if(i instanceof AgentFeu)
-						{
-							AgentFeu aAgent = (AgentFeu) i;
-							iModel.getYard().setObjectLocation(i, aAgent.getLocation());	
-						}
-					}
-				}
-			}
 		}
 		return false;
 	}

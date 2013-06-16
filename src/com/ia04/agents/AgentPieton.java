@@ -1,13 +1,11 @@
 package com.ia04.agents;
-import java.lang.Math;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.ia04.main.Model;
-import com.ia04.constantes.ConstantesAgents;
-
 import sim.engine.SimState;
 import sim.util.Bag;
+
+import com.ia04.main.Model;
 
 @SuppressWarnings("serial")
 public class AgentPieton extends AgentPompier {
@@ -20,6 +18,7 @@ public class AgentPieton extends AgentPompier {
 		Model aModel = (Model) iModel;
 		if(!vivant())
 			return;
+		
 		AgentFeu aAgentFeu = null;
 		int i;
 		
@@ -37,12 +36,15 @@ public class AgentPieton extends AgentPompier {
 				Random random = new Random();
 				int index = random.nextInt(agentsFeu.size());
 				aAgentFeu = agentsFeu.get(index);
-				System.out.println(aAgentFeu);
+//				System.out.println(aAgentFeu);
 				break;				
 			}
 		}
+		
 		if(i==0 || i==1)
-			eteindreFeu(aAgentFeu);
+		{
+			eteindreFeu(aAgentFeu);			
+		}
 		else if(aAgentFeu != null)
 			RapprochementFeu(aAgentFeu, aModel, i);
 		
@@ -91,9 +93,9 @@ public class AgentPieton extends AgentPompier {
 				newX = newPosition[direction][0];
 				newY = newPosition[direction][1];
 				nb_test++;
-				System.out.println("Je suis l'agent "+this.toString());
-				System.out.println("Ma cible est "+ iAgentFeu.toString());
-				System.out.println("Je veux aller en x:"+newX+" y:"+newY);
+//				System.out.println("Je suis l'agent "+this.toString());
+//				System.out.println("Ma cible est "+ iAgentFeu.toString());
+//				System.out.println("Je veux aller en x:"+newX+" y:"+newY);
 			}while(!deplacementPossible(iModel, newX, newY) && nb_test<=10);
 				
 			if(nb_test<=4){
@@ -138,7 +140,7 @@ public class AgentPieton extends AgentPompier {
 			}
 		}
 		catch(Exception e){
-			System.out.println("["+x+","+y+"]");
+//			System.out.println("["+x+","+y+"]");
 			System.exit(0);
 		}
 		return true;
