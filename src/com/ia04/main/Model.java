@@ -16,7 +16,6 @@ import com.ia04.agents.AgentFeu;
 import com.ia04.constantes.ConstantesAgents;
 import com.ia04.constantes.ConstantesEnv;
 import com.ia04.constantes.ConstantesGenerales;
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class Model extends SimState {
 
@@ -472,6 +471,10 @@ public class Model extends SimState {
 
 	public void incNbFiremen(){
 		nbFiremen++;
+	}
+	
+	public void decNbFiremen(){
+		nbFiremen--;
 	}
 
 	public int getNbBurnt(){

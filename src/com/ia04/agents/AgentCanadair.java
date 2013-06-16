@@ -78,7 +78,7 @@ public class AgentCanadair extends AgentPompier {
 				if(i instanceof AgentFeu)
 				{
 					AgentFeu aAgent = (AgentFeu)i;
-					aAgent.reduceRes(getForce());
+					aAgent.reduceRes(iModel, getForce());
 				}
 			}			
 		}

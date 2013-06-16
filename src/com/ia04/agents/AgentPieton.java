@@ -5,6 +5,7 @@ import java.util.Random;
 import sim.engine.SimState;
 import sim.util.Bag;
 
+import com.ia04.constantes.ConstantesAgents;
 import com.ia04.main.Model;
 
 @SuppressWarnings("serial")
@@ -21,6 +22,7 @@ public class AgentPieton extends AgentPompier {
 			this.getStp().stop();
 			aModel.getYard().remove(this);
 			aModel.incNbDied();
+			aModel.decNbFiremen();
 		}
 		else if (aModel.schedule.getSteps()%5 == 0) // petite régénération
 		{
@@ -44,24 +46,24 @@ public class AgentPieton extends AgentPompier {
 				Random random = new Random();
 				int index = random.nextInt(agentsFeu.size());
 				aAgentFeu = agentsFeu.get(index);
-//				System.out.println(aAgentFeu);
 				break;				
 			}
 		}
 		
 		if(i==0 || i==1)
-			eteindreFeu(aAgentFeu);
+			eteindreFeu(aModel, aAgentFeu);
 		else if(aAgentFeu != null)
-			RapprochementFeu(aAgentFeu, aModel, i);
+			deplace(aAgentFeu, aModel, i);
 		
 	}
 	
-	private void eteindreFeu(AgentFeu aAgentFeu) {
-		aAgentFeu.reduceRes(this.getForce());
+	private void eteindreFeu(Model iModel, AgentFeu aAgentFeu) {
+		this.setFeu(aAgentFeu);
+		aAgentFeu.reduceRes(iModel, this.getForce());
 		
 	}
 	
-	protected boolean RapprochementFeu(AgentFeu iAgentFeu, Model iModel, Integer iDist)
+	protected void deplace(AgentFeu iAgentFeu, Model iModel, Integer iDist)
 	{
 		Integer deplacementRestant = this.getDeplacement();
 		Integer newX, newY, currentX, currentY;
@@ -74,12 +76,13 @@ public class AgentPieton extends AgentPompier {
 			int[][] newPosition = new int[4][2];
 			int dividerX = Math.abs(deltaX)!=0?Math.abs(deltaX):1;
 			int dividerY = Math.abs(deltaY)!=0?Math.abs(deltaY):1;
-			if((Math.min(Math.abs(deltaX), Math.abs(deltaY)) == Math.abs(deltaX)) && deltaX!=0){
+			if((Math.max(Math.abs(deltaX), Math.abs(deltaY)) == Math.abs(deltaX)) && deltaX!=0){
 				newPosition = getNewAbscissePosition(currentX, currentY, deltaX, deltaY, dividerX, dividerY);
 			}else if(deltaY != 0){
 				newPosition = getNewOrdonneePosition(currentX, currentY, deltaX, deltaY, dividerX, dividerY);
 			}else{
-				return true;
+				// Le pompier est sur un feu
+				return;
 			}
 			Integer nb_test = 0;
 			
@@ -87,22 +90,26 @@ public class AgentPieton extends AgentPompier {
 				Random random = new Random();
 				Integer directionProbability = random.nextInt(100)+1;
 				Integer direction;
-				if(directionProbability<=97){
+				int firstProba = ConstantesAgents.REDUCE_HIGHER;
+				int secondProba = firstProba + ConstantesAgents.REDUCE_LOWER;
+				int thirdProba = secondProba + ConstantesAgents.INCREASE_LOWER;
+				int fourthProba = thirdProba + ConstantesAgents.INCREASE_HIGHER;
+				if(directionProbability<=firstProba){
 					direction = 0;
-				}else if(directionProbability<=98){
+				}else if(directionProbability<=secondProba){
 					direction = 1;
-				}else if(directionProbability<=99){
+				}else if(directionProbability<=thirdProba){
 					direction = 2;
-				}else{
+				}else if(directionProbability <= fourthProba){
 					direction = 3;
+				}else{
+					//La somme des constantes ne fait pas 100%
+					return;
 				}
 				newX = newPosition[direction][0];
 				newY = newPosition[direction][1];
 				nb_test++;
-//				System.out.println("Je suis l'agent "+this.toString());
-//				System.out.println("Ma cible est "+ iAgentFeu.toString());
-//				System.out.println("Je veux aller en x:"+newX+" y:"+newY);
-			}while(!deplacementPossible(iModel, newX, newY) && nb_test<=10);
+			}while(!deplacementPossible(iModel, newX, newY) && nb_test<=ConstantesAgents.TRY_POSITION);
 				
 			if(nb_test<=4){
 				deplace(iModel, newX, newY);
@@ -112,7 +119,7 @@ public class AgentPieton extends AgentPompier {
 			}
 			deplacementRestant--;
 		}
-		return false;
+		return;
 	}
 	public int[][] getNewAbscissePosition(int currentX, int currentY, int deltaX, int deltaY, int dividerX, int dividerY){
 		int[][] newPosition = new int[4][2];
@@ -141,8 +148,9 @@ public class AgentPieton extends AgentPompier {
 	public boolean deplacementPossible(Model iModel, int x, int y){
 		try{
 			for(Object item: iModel.getYard().getObjectsAtLocation(x, y)){
-				if(item instanceof AgentPieton)
+				if(item instanceof AgentPieton){
 					return false;
+				}
 			}
 		}
 		catch(Exception e){
