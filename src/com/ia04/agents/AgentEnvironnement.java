@@ -86,14 +86,16 @@ public class AgentEnvironnement implements Steppable, Valuable {
 
 	public void step(SimState iModel) {		
 		Model aModel = (Model) iModel;
-		if(this.isInflammable() && this.resInterne == 0 && this.getType() != ConstantesAgents.TYPE_BRULE)
+		if(this.isInflammable() && this.resInterne <= 0 && this.getType() != ConstantesAgents.TYPE_BRULE)
 		{
-			AgentEnvironnement aAgentEnv = new AgentEnvironnement(ConstantesAgents.TYPE_BRULE, 0);
-			Int2D aLocation = new Int2D(this.getX(), this.getY());if(this.stp!=null)
+			Int2D aLocation = new Int2D(this.getX(), this.getY());
 			this.stp.stop();
-			aModel.getYard().removeObjectsAtLocation(aLocation.x, aLocation.y);
+			aModel.getYard().remove(this);
+			
+			AgentEnvironnement aAgentEnv = new AgentEnvironnement(ConstantesAgents.TYPE_BRULE, 0);
 			aAgentEnv.setLocation(aLocation);
 			aModel.getYard().setObjectLocation(aAgentEnv, aLocation);
+			aModel.schedule.scheduleRepeating(aAgentEnv);
 		}
 	}
 
