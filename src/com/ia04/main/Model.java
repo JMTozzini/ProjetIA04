@@ -428,13 +428,13 @@ public class Model extends SimState {
 					aRandomPlacement);
 			Int2D aLocation = null;
 			if(aRandomPlacement==0)
-				aLocation = new Int2D(-1, random.nextInt(yard.getHeight()));
+				aLocation = new Int2D(-3, random.nextInt(yard.getHeight()));
 			else if(aRandomPlacement==1)
-				aLocation = new Int2D(random.nextInt(yard.getWidth()), -1);
+				aLocation = new Int2D(random.nextInt(yard.getWidth()), -3);
 			else if(aRandomPlacement==2)
-				aLocation = new Int2D(yard.getWidth(), random.nextInt(yard.getHeight()));
+				aLocation = new Int2D(yard.getWidth()+2, random.nextInt(yard.getHeight()));
 			else if(aRandomPlacement==3)
-				aLocation = new Int2D(random.nextInt(yard.getWidth()), yard.getHeight());
+				aLocation = new Int2D(random.nextInt(yard.getWidth()), yard.getHeight()+2);
 			
 			aAgentCan.setOrigine(aLocation);
 			aAgentCan.setLocation(aLocation);
