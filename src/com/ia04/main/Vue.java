@@ -20,7 +20,6 @@ import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.simple.RectanglePortrayal2D;
 import sim.util.Bag;
 
-
 import com.ia04.agents.AgentCamion;
 import com.ia04.agents.AgentCanadair;
 import com.ia04.agents.AgentEnvironnement;
@@ -81,10 +80,12 @@ public class Vue extends GUIState{
 //		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new ImagePortrayal2D(new ImageIcon("res/feu2.png"), 1));
 		yardPortrayal.setPortrayalForClass(AgentCamion.class, new OvalPortrayal2D(Color.MAGENTA, 1, true));
+//		yardPortrayal.setPortrayalForClass(AgentCamion.class, new LabelledPortrayal2D(new OvalPortrayal2D(Color.MAGENTA, 1, false), "C"));
 //		yardPortrayal.setPortrayalForClass(AgentCamion.class, new ImagePortrayal2D(new ImageIcon("res/camion3.png"), 1));
 //		yardPortrayal.setPortrayalForClass(AgentCanadair.class, new OvalPortrayal2D(Color.YELLOW, 1, true));
 		yardPortrayal.setPortrayalForClass(AgentCanadair.class, new ImagePortrayal2D(new ImageIcon("res/canadair.png"), 2));
 		yardPortrayal.setPortrayalForClass(AgentPieton.class, new OvalPortrayal2D(Color.WHITE, 1, true));
+//		yardPortrayal.setPortrayalForClass(AgentPieton.class, new LabelledPortrayal2D(new OvalPortrayal2D(Color.WHITE, 1, false), "P"));
 //		yardPortrayal.setPortrayalForClass(AgentPieton.class, new ImagePortrayal2D(new ImageIcon("res/pieton.png"), 0.9));
 		yardPortrayal.setDrawPolicy(new DrawPolicy() { // Afficage de l'agent Feu prioritaire
 			public boolean objectToDraw(Bag iBag, Bag oBag) {

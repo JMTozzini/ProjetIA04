@@ -38,13 +38,13 @@ public class ConstantesAgents {
 	
 	// Resistance Pompiers
 	public static int RES_PIETON   = 300;
-	public static int RES_CAMION   = 1000;
-	public static int RES_CANADAIR = 10000;
+	public static int RES_CAMION   = 1000; //Invincible
+	public static int RES_CANADAIR = 10000;//Invincible
 	
 	// Deplacement Pompiers
 	public static int DEP_PIETON   = 1;
-	public static int DEP_CAMION   = 3;
-	public static int DEP_CANADAIR = 6;
+	public static int DEP_CAMION   = 2;
+	public static int DEP_CANADAIR = 3;
 	
 	// Force Pompiers
 	public static int FORCE_PIETON   = 2;
