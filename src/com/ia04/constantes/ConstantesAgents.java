@@ -32,8 +32,8 @@ public class ConstantesAgents {
 	public static int OUEST	= 4;
 	
 	// Nombres Agents Pompiers
-	public static int NB_CAMION            = 4;
-	public static int NB_PIETON_PAR_CAMION = 6;
+	public static int NB_CAMION            = 3;
+	public static int NB_PIETON_PAR_CAMION = 4;
 	public static int NB_CANDAIR           = 2;
 	
 	// Resistance Pompiers

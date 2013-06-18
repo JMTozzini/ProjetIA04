@@ -73,19 +73,19 @@ public class Vue extends GUIState{
 						new ImagePortrayal2D(new ImageIcon("res/maison2.gif"), 1),	// TYPE_HABITATION
 						new RectanglePortrayal2D(new Color(0, 127, 255), 1, true), 	// TYPE_EAU
 						new RectanglePortrayal2D(new Color(115, 115, 115), 1, true),// TYPE_ROUTE
-//						new RectanglePortrayal2D(Color.BLACK, 1, true),				// TYPE_BRULE
-						new ImagePortrayal2D(new ImageIcon("res/brule3.png"), 1),	// TYPE_BRULE
+						new RectanglePortrayal2D(Color.BLACK, 1, true),				// TYPE_BRULE
+//						new ImagePortrayal2D(new ImageIcon("res/brule3.png"), 1),	// TYPE_BRULE
 						// Ordre inversement liée à l'importance (plus important en dernier)
 						})
 				);
 //		yardPortrayal.setPortrayalForClass(AgentFeu.class, new OvalPortrayal2D(Color.RED, 1, true));
 		yardPortrayal.setPortrayalForClass(AgentFeu.class, new ImagePortrayal2D(new ImageIcon("res/feu2.png"), 1));
-//		yardPortrayal.setPortrayalForClass(AgentCamion.class, new OvalPortrayal2D(Color.MAGENTA, 1, true));
-		yardPortrayal.setPortrayalForClass(AgentCamion.class, new ImagePortrayal2D(new ImageIcon("res/camion3.png"), 1));
+		yardPortrayal.setPortrayalForClass(AgentCamion.class, new OvalPortrayal2D(Color.MAGENTA, 1, true));
+//		yardPortrayal.setPortrayalForClass(AgentCamion.class, new ImagePortrayal2D(new ImageIcon("res/camion3.png"), 1));
 //		yardPortrayal.setPortrayalForClass(AgentCanadair.class, new OvalPortrayal2D(Color.YELLOW, 1, true));
 		yardPortrayal.setPortrayalForClass(AgentCanadair.class, new ImagePortrayal2D(new ImageIcon("res/canadair.png"), 2));
-//		yardPortrayal.setPortrayalForClass(AgentPieton.class, new OvalPortrayal2D(Color.WHITE, 1, true));
-		yardPortrayal.setPortrayalForClass(AgentPieton.class, new ImagePortrayal2D(new ImageIcon("res/pieton2.png"), 0.9));
+		yardPortrayal.setPortrayalForClass(AgentPieton.class, new OvalPortrayal2D(Color.WHITE, 1, true));
+//		yardPortrayal.setPortrayalForClass(AgentPieton.class, new ImagePortrayal2D(new ImageIcon("res/pieton.png"), 0.9));
 		yardPortrayal.setDrawPolicy(new DrawPolicy() { // Afficage de l'agent Feu prioritaire
 			public boolean objectToDraw(Bag iBag, Bag oBag) {
 				for(Object aAgent : iBag)

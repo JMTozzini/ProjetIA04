@@ -165,7 +165,6 @@ public class Model extends SimState {
 				Int2D aLocationStep1 = getNewDirection(aPrevAgent, aAgentRoute, aNewSens);
 				Int2D aLocationFinal = new Int2D(yard.stx(aLocationStep1.x), yard.sty(aLocationStep1.y));
 				yard.setObjectLocation(aAgentRoute, aLocationFinal);
-				yard.setObjectLocation(aAgentRoute, aLocationFinal);
 				aAgentRoute.setLocation(aLocationFinal);
 				aPrevAgent = aAgentRoute;
 			}
